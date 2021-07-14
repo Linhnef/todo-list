@@ -6,10 +6,9 @@ export type CreateApiClientArgs = {
 
 export const createApiClient = (args: CreateApiClientArgs): AxiosInstance => {
   const { baseURL } = args
-
   const api = axios.create({
     baseURL,
   })
-
   return api
 }
+

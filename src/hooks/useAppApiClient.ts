@@ -1,3 +1,3 @@
-import { getAppContainer } from "../container"
+import { getAppContainer } from "../container";
 
-export const useAppApiClient = () => getAppContainer().apiClient
+export const UseAppApiClient = () => getAppContainer().apiClient;
