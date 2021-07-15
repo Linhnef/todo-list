@@ -14,7 +14,7 @@ interface ContextProps {
   login: (data: LoginRequest) => void
   register: (data: RegisterRequest) => void
   logout: () => void
-  getCurrentUser : () => void
+  getCurrentUser: () => void
 }
 
 export const AuthenticationContext = React.createContext<ContextProps>({
@@ -26,7 +26,7 @@ export const AuthenticationContext = React.createContext<ContextProps>({
   login: (data: LoginRequest) => {},
   register: (data: RegisterRequest) => {},
   logout: () => {},
-  getCurrentUser: () => {}
+  getCurrentUser: () => {},
 })
 
 const retrieveStoredToken = () => {
@@ -46,7 +46,7 @@ export const AuthenticationContextProvider = (props: autheChildren) => {
   if (tokenData) {
     initialToken = tokenData.token
   }
-  const [user, setUser] = React.useState<User | undefined>(undefined);
+  const [user, setUser] = React.useState<User | undefined>(undefined)
   const [token, setToken] = React.useState(initialToken)
   const [loading, setLoading] = React.useState<boolean>(false)
   const [error, setErorr] = React.useState<string | null>(null)
@@ -55,6 +55,7 @@ export const AuthenticationContextProvider = (props: autheChildren) => {
   const useRegister = UseAsync<string | undefined, RegisterRequest>(api.register)
   const useLogout = UseAsync<boolean | undefined, {}>(api.logout)
   const useGetCurrentUser = UseAsync<User | undefined, {}>(api.getCurrentUser)
+  token ? localStorage.setItem('token',token) : localStorage.clear();
   const loginHandler = (loginRequest: LoginRequest) => {
     useLogin.fetch(loginRequest)
   }
@@ -68,7 +69,7 @@ export const AuthenticationContextProvider = (props: autheChildren) => {
   }
 
   const getCurrentUserHandler = () => {
-    useGetCurrentUser.fetch();
+    useGetCurrentUser.fetch()
   }
 
   React.useEffect(() => {
@@ -76,7 +77,6 @@ export const AuthenticationContextProvider = (props: autheChildren) => {
     setLoading(loading)
     setToken(data)
     setErorr(error)
-    data && localStorage.setItem("token", data)
   }, [useLogin.loading])
 
   useEffect(() => {
@@ -84,7 +84,6 @@ export const AuthenticationContextProvider = (props: autheChildren) => {
     setLoading(loading)
     setToken(data)
     setErorr(error)
-    data && localStorage.setItem("token", data)
   }, [useRegister.loading])
 
   useEffect(() => {
@@ -92,7 +91,7 @@ export const AuthenticationContextProvider = (props: autheChildren) => {
     setLoading(loading)
     setToken(null)
     setErorr(error)
-    data && localStorage.clear()
+    setUser(undefined)
   }, [useLogout.loading])
 
   useEffect(() => {
@@ -100,12 +99,10 @@ export const AuthenticationContextProvider = (props: autheChildren) => {
     setLoading(loading)
     setUser(data)
     setErorr(error)
-    data && localStorage.clear()
-  },[useGetCurrentUser.loading])
-
+  }, [useGetCurrentUser.loading])
 
   const contextValue: ContextProps = {
-    user : user,
+    user: user,
     token: token,
     loading: loading,
     isLogin: userIsLoggedIn,
@@ -113,7 +110,7 @@ export const AuthenticationContextProvider = (props: autheChildren) => {
     login: loginHandler,
     logout: logoutHanlder,
     register: registerHanler,
-    getCurrentUser : getCurrentUserHandler
+    getCurrentUser: getCurrentUserHandler,
   }
   return <AuthenticationContext.Provider value={contextValue}>{props.children}</AuthenticationContext.Provider>
 }

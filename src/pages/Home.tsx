@@ -17,10 +17,9 @@ export const Home = () => {
   const handleUpdateProfileStatusDialogChange = () => {
     setUpdateProfileDialogStatus(!updateProfileDialogStatus)
   }
-  const { isLogin,user,getCurrentUser } = React.useContext(AuthenticationContext)
-  const [currentUser, setCurrentUser] = React.useState<User | undefined>(user)
+  const { isLogin, user, getCurrentUser } = React.useContext(AuthenticationContext)
   const loadProfile = async () => {
-    if(isLogin) getCurrentUser();
+    if (isLogin) getCurrentUser()
   }
   React.useEffect(() => {
     loadProfile()
@@ -38,11 +37,11 @@ export const Home = () => {
         )}
       </DialogCard>
       <DialogCard open={updateProfileDialogStatus} onClose={handleUpdateProfileStatusDialogChange}>
-      {user !== undefined ? (
-        <UpdateUserInformationCard user={user}></UpdateUserInformationCard>
-      ) : (
-        <h2 style={{ textAlign: "center" }}>Please login !!!</h2>
-      )}
+        {user !== undefined ? (
+          <UpdateUserInformationCard user={user}></UpdateUserInformationCard>
+        ) : (
+          <h2 style={{ textAlign: "center" }}>Please login !!!</h2>
+        )}
       </DialogCard>
     </MainLayout>
   )
