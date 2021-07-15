@@ -1,23 +1,52 @@
-import { Dialog } from "@material-ui/core"
+import { TextField,Grid,ListItem,ListItemSecondaryAction,IconButton } from "@material-ui/core"
 import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 import { MainLayout } from "../layouts/MainLayout"
 import * as React from "react"
-import { User } from "../services/api/types/User"
 import { AuthenticationContext } from "../contexts/authenticationContext"
-import { UserProfileCard } from "../components/UserProfileCard"
-import { UpdateUserInformationCard } from "../components/UpdateUserInformationCard"
 import { DialogCard } from "../components/DialogCard"
+import styled from "styled-components"
+
+
+const ProfileGrid = styled(Grid)`
+  text-align: center;
+  width: 50em;
+`
+
+
+const UpdateUserInformationCardTextField = styled(TextField)`
+  margin-left: 2em;
+`
+const RequireLoginCard = styled.h2`
+  text-align: center;
+`;
+
+const ProfileTitle = styled(Grid)`
+  text-align: center;
+`
 
 export const Home = () => {
+  const { isLogin, user, getCurrentUser } = React.useContext(AuthenticationContext)
   const [profileDialogStatus, setProfileDialogStatus] = React.useState(false)
   const [updateProfileDialogStatus, setUpdateProfileDialogStatus] = React.useState(false)
+  const [name, setName] = React.useState<string | undefined>()
+  const [age, setAge] = React.useState<number | undefined>()
+  const [email, setEmail] = React.useState<string | undefined>()
+
+  const nameChange = (event: any) => {
+    setName(event.target.value)
+  }
+  const ageChange = (event: any) => {
+    setAge(event.target.value)
+  }
+  const emailChange = (event: any) => {
+    setEmail(event.target.value)
+  }
   const handleProfileStatusDIalogChange = () => {
     setProfileDialogStatus(!profileDialogStatus)
   }
   const handleUpdateProfileStatusDialogChange = () => {
     setUpdateProfileDialogStatus(!updateProfileDialogStatus)
   }
-  const { isLogin, user, getCurrentUser } = React.useContext(AuthenticationContext)
   const loadProfile = async () => {
     if (isLogin) getCurrentUser()
   }
@@ -31,16 +60,50 @@ export const Home = () => {
       <ButtonOutlined text="UPDATE PROFILE" onclick={handleUpdateProfileStatusDialogChange}></ButtonOutlined>
       <DialogCard open={profileDialogStatus} onClose={handleProfileStatusDIalogChange}>
         {user !== undefined ? (
-          <UserProfileCard user={user}></UserProfileCard>
+         <ProfileTitle>
+         <h2>Profile</h2>
+         <h4>
+           {user.name} : {user.age}
+         </h4>
+         <h4>{user.email}</h4>
+       </ProfileTitle>
         ) : (
-          <h2 style={{ textAlign: "center" }}>Please login !!!</h2>
+          <RequireLoginCard>Please login !!!</RequireLoginCard>
         )}
       </DialogCard>
       <DialogCard open={updateProfileDialogStatus} onClose={handleUpdateProfileStatusDialogChange}>
         {user !== undefined ? (
-          <UpdateUserInformationCard user={user}></UpdateUserInformationCard>
+         <div>
+            <ProfileGrid alignItems="center" container direction="column">
+        <h2>Profile</h2>
+      </ProfileGrid>
+      <ListItem>
+        <UpdateUserInformationCardTextField label="Name" onChange={nameChange} defaultValue={user.name} value={name} />
+        <ListItemSecondaryAction>
+          <IconButton edge="end" aria-label="update">
+            <ButtonOutlined onclick={() => {}} text="UPDATE" />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+      <ListItem>
+        <UpdateUserInformationCardTextField label="Age" onChange={ageChange} defaultValue={user.age}  value={age} />
+        <ListItemSecondaryAction>
+          <IconButton edge="end" aria-label="update">
+            <ButtonOutlined onclick={() => {}} text="UPDATE" />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+      <ListItem>
+        <UpdateUserInformationCardTextField label="label" onChange={emailChange} defaultValue={user.email} value={email} />
+        <ListItemSecondaryAction>
+          <IconButton edge="end" aria-label="update">
+            <ButtonOutlined onclick={() => {}} text="UPDATE" />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+         </div>
         ) : (
-          <h2 style={{ textAlign: "center" }}>Please login !!!</h2>
+          <RequireLoginCard>Please login !!!</RequireLoginCard>
         )}
       </DialogCard>
     </MainLayout>
