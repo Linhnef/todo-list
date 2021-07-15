@@ -6,7 +6,7 @@ interface uploadProps {
   upload: (img: FormData) => void
 }
 
-export const UploadImage = (props: uploadProps) => {
+export const UploadAvatarUserCard = (props: uploadProps) => {
   const [file, setFile] = useState<any>()
 
   const handleImageChange = function (e: React.ChangeEvent<HTMLInputElement>) {

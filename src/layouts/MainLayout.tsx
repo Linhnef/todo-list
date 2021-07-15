@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Header } from "../components/Header";
-import { LogoutButton } from "../components/Logout";
+import { LogoutButton } from "../components/LogoutButton";
 import { api } from "../container";
 import * as React from "react";
 import { AuthenticationContext } from "../contexts/authenticationContext";
@@ -16,9 +16,7 @@ export const MainLayout = (props: layoutProps) => {
   const { token, logout } = React.useContext(AuthenticationContext);
   const handleLogout = async () => {
     if (token !== undefined && token !== null) {
-      api.defaults.headers.common["Content-Type"] = "application/json";
-      api.defaults.headers.common["Accept"] = "application/json";
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      await UseAppApiClient().setToken(token);
       const response = await UseAppApiClient().logout();
       logout();
       history.push("/");

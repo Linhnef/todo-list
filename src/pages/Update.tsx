@@ -1,5 +1,4 @@
 import { MainLayout } from "../layouts/MainLayout"
-import { Profile } from "../components/Profile"
 import { useState } from "react"
 import { User } from "../services/api/types/User"
 import { api } from "../container"
@@ -7,8 +6,9 @@ import { UseAppApiClient } from "../hooks/useAppApiClient"
 import { useContext } from "react"
 import { AuthenticationContext } from "../contexts/authenticationContext"
 import { useEffect } from "react"
+import { UpdateUserInformationCard } from "../components/UpdateUserInformationCard"
 
-export const ProfilePage = () => {
+export const Update = () => {
   const [user, setUser] = useState<User>()
   const { token } = useContext(AuthenticationContext)
   const loadProfile = async () => {
@@ -25,7 +25,7 @@ export const ProfilePage = () => {
   }, [])
   return (
     <MainLayout>
-      {user !== undefined ? <Profile user={user}></Profile> : <h2 style={{ textAlign: "center" }}>Error</h2>}
+      {user !== undefined ? <UpdateUserInformationCard user={user}></UpdateUserInformationCard> : <h2 style={{ textAlign: "center" }}>Please login !!!</h2>}
     </MainLayout>
   )
 }

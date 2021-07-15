@@ -1,11 +1,11 @@
 import * as React from 'react'
 
 
-export const useInput =  (validateValue : (arg : string) => boolean) => {
+export const useInput =  (validateConditionFuntion : (arg : string) => boolean) => {
     const [value,setValue] = React.useState('');
     const [isTouched,setIsTouched] = React.useState(false);
 
-    const isValueValid = validateValue(value);
+    const isValueValid = validateConditionFuntion(value);
     
     const hasError = !isValueValid && isTouched;
 

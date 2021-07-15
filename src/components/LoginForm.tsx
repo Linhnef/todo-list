@@ -1,19 +1,16 @@
-import styled from "styled-components";
-import { useInput } from "../hooks/useInput";
-import { ModalOverlay } from "./Default";
-import {
-  Form,
-  FormButton,
-  FormControl,
-  FormInput,
-  FormLabel,
-} from "./Register";
-
+import { useInput } from "../hooks/useInput"
+import styled from "styled-components"
+import { Form, FormButton, FormControl, FormInput, FormLabel } from "./RegisterForm"
+import { Modal } from "@material-ui/core"
 interface formProps {
-  signin: (email: string, password: string) => void;
+  signin: (email: string, password: string) => void
 }
 
-export const Login = (props: formProps) => {
+const FormModal = styled(Modal)`
+  margin: 7em auto;
+`
+
+export const LoginForm = (props: formProps) => {
   const {
     value: email,
     isValueValid: emailiIsValid,
@@ -21,7 +18,7 @@ export const Login = (props: formProps) => {
     inputBlurHandler: handleEmailBlur,
     valueChangeHanlder: emailHanldeChange,
     reset: resetInputEmail,
-  } = useInput((value) => value.trim().includes("@"));
+  } = useInput((value) => value.trim().includes("@"))
 
   const {
     value: password,
@@ -30,33 +27,29 @@ export const Login = (props: formProps) => {
     inputBlurHandler: handlePasswordlBlur,
     valueChangeHanlder: passwordHanldeChange,
     reset: resetInputpassword,
-  } = useInput((value) => value.trim() !== "" && value.trim().length > 6);
+  } = useInput((value) => value.trim() !== "" && value.trim().length > 6)
 
-  let formValid = false;
-  if (!passwordInputHasError && !emailInputHasError) formValid = true;
+  let formValid = false
+  if (!passwordInputHasError && !emailInputHasError) formValid = true
   const handleLogin = (event: any) => {
-    event.preventDefault();
-    handleEmailBlur(true);
-    handlePasswordlBlur(true);
+    event.preventDefault()
+    handleEmailBlur(true)
+    handlePasswordlBlur(true)
     if (!(passwordInputValid && emailiIsValid)) {
-      return;
+      return
     }
-    props.signin(email, password);
-    resetInputEmail();
-    resetInputpassword();
-  };
+    props.signin(email, password)
+    resetInputEmail()
+    resetInputpassword()
+  }
 
   return (
-    <ModalOverlay zIndex={0}>
+    <FormModal open>
       <FormControl>
         <Form>
           <FormLabel htmlFor="email">Email</FormLabel>
           <FormInput
-            style={
-              emailInputHasError
-                ? { backgroundColor: "violet" }
-                : { backgroundColor: "white" }
-            }
+            style={emailInputHasError ? { backgroundColor: "violet" } : { backgroundColor: "white" }}
             value={email}
             onChange={emailHanldeChange}
             id="email"
@@ -66,11 +59,7 @@ export const Login = (props: formProps) => {
 
           <FormLabel htmlFor="password">Password</FormLabel>
           <FormInput
-            style={
-              passwordInputHasError
-                ? { backgroundColor: "violet" }
-                : { backgroundColor: "white" }
-            }
+            style={passwordInputHasError ? { backgroundColor: "violet" } : { backgroundColor: "white" }}
             value={password}
             onChange={passwordHanldeChange}
             id="password"
@@ -82,6 +71,6 @@ export const Login = (props: formProps) => {
           </FormButton>
         </Form>
       </FormControl>
-    </ModalOverlay>
-  );
-};
+    </FormModal>
+  )
+}
