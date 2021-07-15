@@ -7,17 +7,8 @@ export const createAppApiClient = (api: AxiosInstance) => {
     register: register(api),
     logout: logout(api),
     getCurrentUser: getCurrentUser(api),
-    setToken : setToken(api)
   }
 }
-
-const setToken =
-  (api: AxiosInstance) =>
-  async (token : string) => {
-    api.defaults.headers.common["Content-Type"] = "application/json";
-    api.defaults.headers.common["Accept"] = "application/json";
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  }
 
 type LoginResponse = {
   token: string

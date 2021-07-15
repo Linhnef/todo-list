@@ -9,15 +9,13 @@ import { UseAppApiClient } from "../hooks/useAppApiClient"
 interface MainLayoutProps {
   children: any
 }
-// Layout for private pages
 export const MainLayout = (props: MainLayoutProps) => {
   const history = useHistory()
-  const { token, logout } = React.useContext(AuthenticationContext)
+  const { isLogin,logout } = React.useContext(AuthenticationContext)
   const handleLogout = async () => {
-    if (token !== undefined && token !== null) {
-      await UseAppApiClient().setToken(token)
+    if (isLogin) {
       logout()
-      history.push("/login");
+      history.push("/login")
     }
   }
   return (
