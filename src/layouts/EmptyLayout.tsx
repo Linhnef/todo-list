@@ -1,18 +1,19 @@
-import styled from "styled-components";
-import { Header } from "../components/Header";
-import * as React from "react";
+import styled from "styled-components"
+import { Header } from "../components/Header"
+import * as React from "react"
 
 // Layout for public pages
-interface layoutProps {
-  children: any;
+interface LayoutProps {
+  children: any
 }
-export const EmptyLayout = (props: layoutProps) => {
+export const EmptyLayout = (props: LayoutProps) => {
   return (
     <Layout>
       <Header></Header>
       <main>{props.children}</main>
+      
     </Layout>
-  );
-};
+  )
+}
 
-const Layout = styled.div``;
+const Layout = styled.div``
