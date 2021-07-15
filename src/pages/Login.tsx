@@ -8,10 +8,7 @@ export const Login = () => {
   const history = useHistory()
   const { login } = useContext(AuthenticationContext)
   const handleLogin = async (email: string, password: string) => {
-    const response = login({ email: email, password: password })
-    if (response.data !== undefined) {
-      localStorage.setItem("TOKEN", response.data);
-    }
+    login({ email: email, password: password })
     history.push("/")
   }
   return (

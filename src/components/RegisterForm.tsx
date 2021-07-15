@@ -1,12 +1,12 @@
 import styled from "styled-components"
 import { useInput } from "../hooks/useInput"
-import { Modal } from "@material-ui/core"
+import { Dialog, TextField } from "@material-ui/core"
 
 export const Form = styled.form`
   position: relative;
   width: 100%;
 `
-export const FormInput = styled.input`
+export const FormTextField = styled(TextField)`
   margin: 20px;
   width: 95%;
   height: 30px;
@@ -16,7 +16,6 @@ export const FormInput = styled.input`
   }
 `
 export const FormLabel = styled.label`
-  margin-left: 20px;
   color: black;
   font-size: 25px;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
@@ -25,7 +24,7 @@ export const FormLabel = styled.label`
 
 export const FormButton = styled.button`
   position: absolute;
-  bottom: -1em;
+  top : -1em;
   right: 1.4em;
   font-size: 20px;
   width: 100px;
@@ -106,51 +105,50 @@ export const RegisterFrom = (props: formProps) => {
   }
 
   return (
-    <Modal open>
+    <Dialog open>
       <FormControl>
         <Form>
           <FormLabel htmlFor="email">Email</FormLabel>
-          <FormInput
-            style={emailInputHasError ? { backgroundColor: "violet" } : { backgroundColor: "white" }}
+          <FormTextField
+            error={emailInputHasError ? true : false}
             value={email}
             onChange={emailHanldeChange}
             id="email"
             type="text"
             onBlur={handleEmailBlur}
-          ></FormInput>
+          ></FormTextField>
           <FormLabel htmlFor="name">Name</FormLabel>
-          <FormInput
-            style={nameInputHasError ? { backgroundColor: "violet" } : { backgroundColor: "white" }}
+          <FormTextField
+            error={nameInputHasError ? true : false}
             value={name}
             onChange={nameHanldeChange}
             id="name"
             type="text"
             onBlur={handleNameBlur}
-          ></FormInput>
+          ></FormTextField>
           <FormLabel htmlFor="password">Password</FormLabel>
-          <FormInput
-            style={passwordInputHasError ? { backgroundColor: "violet" } : { backgroundColor: "white" }}
+          <FormTextField
+            error={passwordInputHasError ? true : false}
             value={password}
             onChange={passwordHanldeChange}
             id="password"
             type="password"
             onBlur={handlePasswordlBlur}
-          ></FormInput>
+          ></FormTextField>
           <FormLabel htmlFor="age">Age</FormLabel>
-          <FormInput
-            style={ageInputHasError ? { backgroundColor: "violet" } : { backgroundColor: "white" }}
+          <FormTextField
+            error={age ? true : false}
             value={age}
             onChange={ageHanldeChange}
             id="age"
             type="number"
             onBlur={handleAgelBlur}
-          ></FormInput>
+          ></FormTextField>
           <FormButton onClick={handleRegister} type="button" disabled={!formValid}>
             Register
-          </FormButton>{" "}
-          :
+          </FormButton>
         </Form>
       </FormControl>
-    </Modal>
+    </Dialog>
   )
 }

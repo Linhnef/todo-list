@@ -1,18 +1,17 @@
-import { Grid, Modal } from "@material-ui/core"
-import styled from "styled-components"
+import { Grid, Dialog } from "@material-ui/core"
 import { User } from "../services/api/types/User"
+import styled from "styled-components"
 
 const ProfileTitle = styled(Grid)`
   text-align: center;
 `
 
-interface profileProps {
+interface UserProfileCardProps {
   user: User
 }
 
-export const UserProfileCard = (props: profileProps) => {
+export const UserProfileCard = (props: UserProfileCardProps) => {
   return (
-    <Modal open>
       <ProfileTitle>
         <h2>Profile</h2>
         <h4>
@@ -20,6 +19,5 @@ export const UserProfileCard = (props: profileProps) => {
         </h4>
         <h4>{props.user.email}</h4>
       </ProfileTitle>
-    </Modal>
   )
 }

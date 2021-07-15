@@ -1,8 +1,8 @@
 import { useInput } from "../hooks/useInput"
 import styled from "styled-components"
-import { Form, FormButton, FormControl, FormInput, FormLabel } from "./RegisterForm"
-import { Modal } from "@material-ui/core"
-interface formProps {
+import { Form, FormButton, FormControl, FormLabel, FormTextField } from "./RegisterForm"
+import { Modal, TextField } from "@material-ui/core"
+interface FormProps {
   signin: (email: string, password: string) => void
 }
 
@@ -10,7 +10,7 @@ const FormModal = styled(Modal)`
   margin: 7em auto;
 `
 
-export const LoginForm = (props: formProps) => {
+export const LoginForm = (props: FormProps) => {
   const {
     value: email,
     isValueValid: emailiIsValid,
@@ -48,24 +48,24 @@ export const LoginForm = (props: formProps) => {
       <FormControl>
         <Form>
           <FormLabel htmlFor="email">Email</FormLabel>
-          <FormInput
-            style={emailInputHasError ? { backgroundColor: "violet" } : { backgroundColor: "white" }}
+          <FormTextField
+            error={emailInputHasError ? true : false}
             value={email}
             onChange={emailHanldeChange}
             id="email"
             type="text"
             onBlur={handleEmailBlur}
-          ></FormInput>
+          ></FormTextField>
 
           <FormLabel htmlFor="password">Password</FormLabel>
-          <FormInput
-            style={passwordInputHasError ? { backgroundColor: "violet" } : { backgroundColor: "white" }}
+          <FormTextField
+            error={passwordInputHasError ? true : false}
             value={password}
             onChange={passwordHanldeChange}
             id="password"
             type="password"
             onBlur={handlePasswordlBlur}
-          ></FormInput>
+          ></FormTextField>
           <FormButton onClick={handleLogin} type="button" disabled={!formValid}>
             Login
           </FormButton>

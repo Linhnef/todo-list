@@ -1,19 +1,25 @@
-import { TextField, Grid, Button, ListItem, ListItemSecondaryAction, IconButton } from "@material-ui/core"
-import { Background } from "./BackgroundCard"
+import { TextField, Grid, Button, ListItem, ListItemSecondaryAction, IconButton, Dialog } from "@material-ui/core"
 import styled from "styled-components"
 import { User } from "../services/api/types/User"
-import { useState } from "react"
-import { ButtonOutlined } from "./ButtonOutlined"
+import React, { useState } from "react"
+import { ButtonOutlined } from "./buttons/ButtonOutlined"
+import { useContext } from "react"
+import { AuthenticationContext } from "../contexts/authenticationContext"
 
 const ProfileGrid = styled(Grid)`
   text-align: center;
+  width: 50em;
 `
 
-interface updateProps {
+interface UpdateUserInformationCardProps {
   user: User
 }
 
-export const UpdateUserInformationCard = (props: updateProps) => {
+const UpdateUserInformationCardTextField = styled(TextField)`
+  margin-left: 2em;
+`
+
+export const UpdateUserInformationCard = (props: UpdateUserInformationCardProps) => {
   const [name, setName] = useState<string>(props.user.name)
   const [age, setAge] = useState<number>(props.user.age)
   const [email, setEmail] = useState<string>(props.user.email)
@@ -29,13 +35,34 @@ export const UpdateUserInformationCard = (props: updateProps) => {
   }
 
   return (
-    <Background zIndex={20}>
+    <React.Fragment>
       <ProfileGrid alignItems="center" container direction="column">
         <h2>Profile</h2>
       </ProfileGrid>
-      <ButtonOutlined data={name} label="Name" onchange={nameChange} />
-      <ButtonOutlined data={age} label="Age" onchange={ageChange} />
-      <ButtonOutlined data={email} label="Email" onchange={emailChange} />
-    </Background>
+      <ListItem>
+        <UpdateUserInformationCardTextField label="Name" onChange={nameChange} value={name} />
+        <ListItemSecondaryAction>
+          <IconButton edge="end" aria-label="update">
+            <ButtonOutlined onclick={() => {}} text="UPDATE" />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+      <ListItem>
+        <UpdateUserInformationCardTextField label="Age" onChange={ageChange} value={age} />
+        <ListItemSecondaryAction>
+          <IconButton edge="end" aria-label="update">
+            <ButtonOutlined onclick={() => {}} text="UPDATE" />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+      <ListItem>
+        <UpdateUserInformationCardTextField label="label" onChange={emailChange} value={email} />
+        <ListItemSecondaryAction>
+          <IconButton edge="end" aria-label="update">
+            <ButtonOutlined onclick={() => {}} text="UPDATE" />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+    </React.Fragment>
   )
 }

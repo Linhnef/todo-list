@@ -1,7 +1,7 @@
-import { Button } from "@material-ui/core";
+import { Button } from "@material-ui/core"
 
 interface logoutProps {
-  logout: () => void;
+  logout: () => void
 }
 
 export const LogoutButton = (props: logoutProps) => {
@@ -9,5 +9,5 @@ export const LogoutButton = (props: logoutProps) => {
     <Button onClick={props.logout} variant="contained" color="secondary">
       Logout
     </Button>
-  );
-};
+  )
+}
