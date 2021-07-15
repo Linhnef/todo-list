@@ -1,10 +1,8 @@
-import { TextField, Grid, Button, ListItem, ListItemSecondaryAction, IconButton, Dialog } from "@material-ui/core"
+import { TextField, Grid, ListItem, ListItemSecondaryAction, IconButton, Dialog } from "@material-ui/core"
 import styled from "styled-components"
 import { User } from "../services/api/types/User"
 import React, { useState } from "react"
 import { ButtonOutlined } from "./buttons/ButtonOutlined"
-import { useContext } from "react"
-import { AuthenticationContext } from "../contexts/authenticationContext"
 
 const ProfileGrid = styled(Grid)`
   text-align: center;

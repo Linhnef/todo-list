@@ -1,7 +1,7 @@
 import { useInput } from "../hooks/useInput"
-import styled from "styled-components"
 import { Form, FormButton, FormControl, FormLabel, FormTextField } from "./RegisterForm"
-import { Modal, TextField } from "@material-ui/core"
+import { Modal } from "@material-ui/core"
+import styled from "styled-components"
 interface FormProps {
   signin: (email: string, password: string) => void
 }
