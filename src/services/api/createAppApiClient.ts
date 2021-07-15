@@ -6,7 +6,7 @@ export const createAppApiClient = (api: AxiosInstance) => {
     login: login(api),
     register: register(api),
     logout: logout(api),
-    profile: profile(api),
+    getCurrentUser: getCurrentUser(api),
     setToken : setToken(api)
   }
 }
@@ -71,7 +71,7 @@ const logout = (api: AxiosInstance) => async (): Promise<boolean | undefined> =>
   }
 }
 
-const profile = (api: AxiosInstance) => async (): Promise<User | undefined> => {
+const getCurrentUser = (api: AxiosInstance) => async (): Promise<User | undefined> => {
   try {
     const res = await api.get<User>("/user/me")
     return res.data

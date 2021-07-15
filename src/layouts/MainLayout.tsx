@@ -17,8 +17,7 @@ export const MainLayout = (props: layoutProps) => {
   const handleLogout = async () => {
     if (token !== undefined && token !== null) {
       await UseAppApiClient().setToken(token);
-      const response = await UseAppApiClient().logout();
-      logout();
+      const response = logout();
       history.push("/");
       console.log(response);
     }

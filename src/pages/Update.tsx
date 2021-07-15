@@ -16,7 +16,7 @@ export const Update = () => {
       api.defaults.headers.common["Content-Type"] = "application/json"
       api.defaults.headers.common["Accept"] = "application/json"
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`
-      const response = await UseAppApiClient().profile()
+      const response = await UseAppApiClient().getCurrentUser()
       setUser(response)
     }
   }
