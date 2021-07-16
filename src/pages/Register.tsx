@@ -2,9 +2,9 @@ import { useContext } from "react"
 import { useHistory } from "react-router-dom"
 import { EmptyLayout } from "../layouts/EmptyLayout"
 import { AuthenticationContext } from "../contexts/authenticationContext"
-import styled from "styled-components"
 import { TextField, Dialog } from "@material-ui/core"
 import { useInput } from "../hooks/useInput"
+import styled from "styled-components"
 
 export const Form = styled.form`
   position: relative;
@@ -108,7 +108,7 @@ export const Register = () => {
     if (!(emailiIsValid && passwordInputValid && ageInputValid && nameiIsValid)) {
       return
     }
-    handleSignUp(name, email, password, parseInt(age + ""))
+    handleSignUp(name, email, password, parseInt(age))
     resetInputEmail()
     resetInputpassword()
     resetInputName()

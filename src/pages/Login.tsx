@@ -4,8 +4,8 @@ import { AuthenticationContext } from "../contexts/authenticationContext"
 import { useContext } from "react"
 import { Modal } from "@material-ui/core"
 import { useInput } from "../hooks/useInput"
+import { Form, FormTextField, FormLabel, FormControl, FormButton } from "./Register"
 import styled from "styled-components"
-import { Form,FormTextField,FormLabel,FormControl,FormButton } from "./Register"
 const FormModal = styled(Modal)`
   margin: 7em auto;
 `
@@ -51,33 +51,33 @@ export const Login = () => {
   return (
     <EmptyLayout>
       <FormModal open>
-      <FormControl>
-        <Form>
-          <FormLabel htmlFor="email">Email</FormLabel>
-          <FormTextField
-            error={emailInputHasError ? true : false}
-            value={email}
-            onChange={emailHanldeChange}
-            id="email"
-            type="text"
-            onBlur={handleEmailBlur}
-          ></FormTextField>
+        <FormControl>
+          <Form>
+            <FormLabel htmlFor="email">Email</FormLabel>
+            <FormTextField
+              error={emailInputHasError ? true : false}
+              value={email}
+              onChange={emailHanldeChange}
+              id="email"
+              type="text"
+              onBlur={handleEmailBlur}
+            ></FormTextField>
 
-          <FormLabel htmlFor="password">Password</FormLabel>
-          <FormTextField
-            error={passwordInputHasError ? true : false}
-            value={password}
-            onChange={passwordHanldeChange}
-            id="password"
-            type="password"
-            onBlur={handlePasswordlBlur}
-          ></FormTextField>
-          <FormButton onClick={loginHandle} type="button" disabled={!formValid}>
-            Login
-          </FormButton>
-        </Form>
-      </FormControl>
-    </FormModal>
+            <FormLabel htmlFor="password">Password</FormLabel>
+            <FormTextField
+              error={passwordInputHasError ? true : false}
+              value={password}
+              onChange={passwordHanldeChange}
+              id="password"
+              type="password"
+              onBlur={handlePasswordlBlur}
+            ></FormTextField>
+            <FormButton onClick={loginHandle} type="button" disabled={!formValid}>
+              Login
+            </FormButton>
+          </Form>
+        </FormControl>
+      </FormModal>
     </EmptyLayout>
   )
 }

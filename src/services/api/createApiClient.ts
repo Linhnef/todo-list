@@ -1,7 +1,5 @@
 import axios, { AxiosInstance } from "axios"
 
-let isRefreshing = false;
-let refreshSubscribers = [];
 
 export type CreateApiClientArgs = {
   baseURL?: string

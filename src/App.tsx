@@ -6,6 +6,7 @@ import { Home } from "./pages/Home"
 import { Login } from "./pages/Login"
 import { useContext } from "react"
 import { AuthenticationContext } from "./contexts/authenticationContext"
+import { UpdateUser } from "./pages/UpdateUser"
 
 function App() {
   const { isLogin } = useContext(AuthenticationContext)
@@ -17,6 +18,7 @@ function App() {
       </Route>
       <Route path="/login">{!isLogin && <Login />}</Route>
       <Route path="/register" component={Register}></Route>
+      <Route path="/updateUser" component={UpdateUser}></Route>
     </Switch>
   )
 }
