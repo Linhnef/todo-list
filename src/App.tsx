@@ -7,6 +7,7 @@ import { Login } from "./pages/Login"
 import { useContext } from "react"
 import { AuthenticationContext } from "./contexts/authenticationContext"
 import { UpdateUser } from "./pages/UpdateUser"
+import { UserTask } from "./pages/Task"
 
 function App() {
   const { isLogin } = useContext(AuthenticationContext)
@@ -19,6 +20,7 @@ function App() {
       <Route path="/login">{!isLogin && <Login />}</Route>
       <Route path="/register" component={Register}></Route>
       <Route path="/updateUser" component={UpdateUser}></Route>
+      <Route path="/task">{isLogin && <UserTask />}</Route>
     </Switch>
   )
 }

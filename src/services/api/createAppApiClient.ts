@@ -1,4 +1,5 @@
 import { AxiosInstance } from "axios"
+import { Task } from "./types/Task"
 import { User } from "./types/User"
 
 export const createAppApiClient = (api: AxiosInstance) => {
@@ -7,7 +8,8 @@ export const createAppApiClient = (api: AxiosInstance) => {
     register: register(api),
     logout: logout(api),
     getCurrentUser: getCurrentUser(api),
-    updateCurrentUser : updateCurrentUser(api)
+    updateCurrentUser: updateCurrentUser(api),
+    addTask : addTask(api)
   }
 }
 
@@ -72,7 +74,6 @@ const getCurrentUser = (api: AxiosInstance) => async (): Promise<User | undefine
   }
 }
 
-
 export type UpdateCurrentUserRequest = {
   name?: string
   email?: string
@@ -93,4 +94,25 @@ const updateCurrentUser =
       return err
     }
   }
+
+export type AddTaskRequest = {
+  description: string
+}
+
+type AddTaskResponse = {
+  success: boolean
+  data: Task
+}
+
+const addTask =
+  (api: AxiosInstance) =>
+  async (data: AddTaskRequest): Promise<boolean | undefined> => {
+    try {
+      const res = await api.post<AddTaskResponse>("/task", data)
+      return res.data.success
+    } catch (err) {
+      return err
+    }
+  }
+
 

@@ -41,6 +41,7 @@ export const Home = () => {
       <h1>WELL COME HOME !!!</h1>
       <ButtonOutlined text="PROFILE" onclick={handleProfileStatusDIalogChange}></ButtonOutlined>
       <NavLink to="/updateUser">Update User</NavLink>
+      <NavLink to='/task'>Task list</NavLink>
       <ButtonSecondary logout={handleLogout}></ButtonSecondary>
       <Dialog open={profileDialogStatus} onClose={handleProfileStatusDIalogChange}>
         {user !== undefined ? (
