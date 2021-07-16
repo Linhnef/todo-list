@@ -7,6 +7,7 @@ export const createAppApiClient = (api: AxiosInstance) => {
     register: register(api),
     logout: logout(api),
     getCurrentUser: getCurrentUser(api),
+    updateCurrentUser: updateCurrentUser(api),
   }
 }
 
@@ -71,11 +72,24 @@ const getCurrentUser = (api: AxiosInstance) => async (): Promise<User | undefine
   }
 }
 
-const updateProfile = (api: AxiosInstance) => async (): Promise<User | undefined> => {
-  try {
-    const res = await api.put<User>("/user/me")
-    return res.data
-  } catch (err) {
-    return err
-  }
+export type UpdateCurrentUserRequest = {
+  name?: string
+  email?: string
+  age?: number
 }
+type UpdateCUrrentUserResponse = {
+  success: boolean
+  data: User
+}
+
+const updateCurrentUser =
+  (api: AxiosInstance) =>
+  async (data: UpdateCurrentUserRequest): Promise<User | undefined> => {
+    try {
+      const res = await api.put<UpdateCUrrentUserResponse>("/user/me", data)
+      console.log(res)
+      return res.data.data
+    } catch (err) {
+      return err
+    }
+  }

@@ -1,7 +1,7 @@
 import * as React from "react"
 import UseAsync from "../hooks/useAsync"
 import { UseAppApiClient } from "../hooks/useAppApiClient"
-import { LoginRequest, RegisterRequest } from "../services/api/createAppApiClient"
+import { LoginRequest, RegisterRequest, UpdateCurrentUserRequest } from "../services/api/createAppApiClient"
 import { useEffect } from "react"
 import { User } from "../services/api/types/User"
 
@@ -15,6 +15,7 @@ interface ContextProps {
   register: (data: RegisterRequest) => void
   logout: () => void
   getCurrentUser: () => void
+  updateCurrentUser: (data: UpdateCurrentUserRequest) => void
 }
 
 export const AuthenticationContext = React.createContext<ContextProps>({
@@ -27,6 +28,7 @@ export const AuthenticationContext = React.createContext<ContextProps>({
   register: (data: RegisterRequest) => {},
   logout: () => {},
   getCurrentUser: () => {},
+  updateCurrentUser: (data: UpdateCurrentUserRequest) => {},
 })
 
 const retrieveStoredToken = () => {
@@ -55,7 +57,8 @@ export const AuthenticationContextProvider = (props: autheChildren) => {
   const useRegister = UseAsync<string | undefined, RegisterRequest>(api.register)
   const useLogout = UseAsync<boolean | undefined, {}>(api.logout)
   const useGetCurrentUser = UseAsync<User | undefined, {}>(api.getCurrentUser)
-  token ? localStorage.setItem('token',token) : localStorage.clear();
+  const useUpdateCurrentUser = UseAsync<User | undefined, {}>(api.updateCurrentUser)
+  token ? localStorage.setItem("token", token) : localStorage.clear()
   const loginHandler = (loginRequest: LoginRequest) => {
     useLogin.fetch(loginRequest)
   }
@@ -70,6 +73,10 @@ export const AuthenticationContextProvider = (props: autheChildren) => {
 
   const getCurrentUserHandler = () => {
     useGetCurrentUser.fetch()
+  }
+
+  const updateCurrentUserHandler = (updateRequest: UpdateCurrentUserRequest) => {
+    useUpdateCurrentUser.fetch(updateRequest)
   }
 
   React.useEffect(() => {
@@ -101,6 +108,13 @@ export const AuthenticationContextProvider = (props: autheChildren) => {
     setErorr(error)
   }, [useGetCurrentUser.loading])
 
+  useEffect(() => {
+    const { data, error, loading } = useUpdateCurrentUser
+    setLoading(loading)
+    setUser(data)
+    setErorr(error)
+  }, [useUpdateCurrentUser.loading])
+
   const contextValue: ContextProps = {
     user: user,
     token: token,
@@ -111,6 +125,7 @@ export const AuthenticationContextProvider = (props: autheChildren) => {
     logout: logoutHanlder,
     register: registerHanler,
     getCurrentUser: getCurrentUserHandler,
+    updateCurrentUser: updateCurrentUserHandler,
   }
   return <AuthenticationContext.Provider value={contextValue}>{props.children}</AuthenticationContext.Provider>
 }
