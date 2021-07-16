@@ -87,7 +87,6 @@ const updateCurrentUser =
   async (data: UpdateCurrentUserRequest): Promise<User | undefined> => {
     try {
       const res = await api.put<UpdateCUrrentUserResponse>("/user/me", data)
-      console.log(res)
       return res.data.data
     } catch (err) {
       return err
