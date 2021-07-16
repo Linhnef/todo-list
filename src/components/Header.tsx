@@ -1,25 +1,25 @@
+import { AppBar, Grid, Toolbar } from "@material-ui/core"
 import styled from "styled-components"
 
-const CustomDiv = styled.div`
-  position: relative;
-  top: 0em;
+const HeaderAppBar = styled(AppBar)`
   width: 100%;
-  height: 3em;
-  background-color: black;
+  background-color: white;
 `
 
-const CustomP = styled.p`
-  position: absolute;
-  top: -0.5em;
-  left: 1em;
-  font-size: 25px;
-  color: white;
+const RightGrid = styled(Grid)`
+  border: 1px solid;
 `
 
 export const Header = () => {
   return (
-    <CustomDiv>
-      <CustomP>Todo React App</CustomP>
-    </CustomDiv>
+    <HeaderAppBar color="default" position="static">
+      <Toolbar>
+        <Grid container>
+          <RightGrid item sm={12}>
+            <h2>REACT TODOLIST APP</h2>
+          </RightGrid>
+        </Grid>
+      </Toolbar>
+    </HeaderAppBar>
   )
 }
