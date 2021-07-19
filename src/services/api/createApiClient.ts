@@ -30,7 +30,7 @@ export const createApiClient = (args: CreateApiClientArgs): AxiosInstance => {
     (response) => response,
     (error) => {
       const status = error.response ? error.response.status : null
-      if (status === 401) {
+      if (status) {
         localStorage.clear()
         window.location.href = "/login"
       }
