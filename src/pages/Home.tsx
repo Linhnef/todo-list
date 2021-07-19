@@ -21,7 +21,7 @@ export const Home = () => {
       <NavLink to="/updateUser">Update User</NavLink>
       <Logout />
       <Dialog open={profileDialogStatus} onClose={handleProfileStatusDIalogChange}>
-        {user !== null ? (
+        {user ? (
           <ProfileTitle>
             <h2>Profile</h2>
             <h4>

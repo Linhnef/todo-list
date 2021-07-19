@@ -2,7 +2,7 @@ import { useState, createContext, ReactNode } from "react"
 import { User } from "../services/api/types/User"
 
 interface AuthenticationContextProps {
-  user: User | null
+  user: User | null | undefined
   setUser: (data: User) => void
   token: string | undefined | null
   setToken: (data: string | null) => void

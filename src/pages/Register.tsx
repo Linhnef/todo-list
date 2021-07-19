@@ -19,19 +19,16 @@ export const Register = () => {
   const register = useAsync<LoginResponse | undefined | null, RegisterRequest>(api.register)
 
   const handleSignUp = async (username: string, email: string, password: string, age: number) => {
-    const result = register.run({
+    const result = await register.run({
       name: username,
       email: email,
       password: password,
       age: age,
     })
     if (!result) return
-    const { data, error } = register
-    if (error === null && data) {
-      setToken(data.token)
-      setUser(data.user)
-      history.replace("/")
-    }
+    setToken(result.data.token)
+    setUser(result.data.user)
+    history.replace("/")
   }
 
   const {

@@ -12,14 +12,11 @@ export const Logout = () => {
   const history = useHistory()
   const logout = useAsync<boolean | undefined | null, {}>(api.logout)
   const handleLogout = async () => {
-    const result = logout.run()
+    const result = await logout.run()
     if (!result) return
-    const { data } = logout
-    if (data) {
-      setToken(null)
-      localStorage.clear()
-      history.replace("/login")
-    }
+    setToken(null)
+    localStorage.clear()
+    history.replace("/login")
   }
 
   return <ButtonSecondary onClick={handleLogout}>Logout</ButtonSecondary>

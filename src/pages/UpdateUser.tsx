@@ -16,24 +16,21 @@ export const UpdateUser = () => {
   const history = useHistory()
   const api = useAppApiClient()
   const { user, setUser } = useContext(AuthenticationContext)
-  const [name, setName] = useState<string | undefined>()
-  const [age, setAge] = useState<number | undefined>()
-  const [email, setEmail] = useState<string | undefined>()
+  const [name, setName] = useState<string>()
+  const [age, setAge] = useState<number>()
+  const [email, setEmail] = useState<string>()
 
   const updateUser = useAsync<User | undefined | null, UpdateCurrentUserRequest>(api.updateCurrentUser)
 
-  const handleUpdate = () => {
-    const result = updateUser.run({ name, age, email })
+  const handleUpdate = async () => {
+    const result = await updateUser.run({ name: name, age, email })
     if (!result) return
-    const { data } = updateUser
-    if (data) {
-      setUser(data)
-      history.replace("/")
-    }
+    setUser(result.data)
+    history.replace("/")
   }
   return (
     <React.Fragment>
-      {updateUser.error === null && user !== null ? (
+      {updateUser.error === null && user ? (
         <FormControl container>
           <ProfileGrid alignItems="center" container direction="column">
             <h2>Profile</h2>
@@ -42,14 +39,14 @@ export const UpdateUser = () => {
           <FormGrid item xs={2}>
             <InputOutlined
               label="Name"
-              onChange={(event: any) => propsChange<string>(event, setName)}
+              onChange={(event: any) => setName(event.target.value)}
               defaultValue={user.name}
               value={name}
             />
 
             <InputOutlined
               label="Age"
-              onChange={(event: any) => propsChange<number>(event, setAge)}
+              onChange={(event: any) => setAge(event.target.value)}
               defaultValue={user.age}
               value={age}
               type="number"
@@ -57,7 +54,7 @@ export const UpdateUser = () => {
 
             <InputOutlined
               label="label"
-              onChange={(event: any) => propsChange<string>(event, setEmail)}
+              onChange={(event: any) => setEmail(event.target.value)}
               defaultValue={user.email}
               value={email}
             />

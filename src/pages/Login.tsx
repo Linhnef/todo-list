@@ -8,27 +8,24 @@ import { Form, FormControl } from "./Register"
 import useAsync from "../hooks/useAsync"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import { LoginRequest, LoginResponse } from "../services/api/createAppApiClient"
-import { useEffect, useState } from "react"
 import { InputOutlined } from "../components/inputs/InputOutlined"
 import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 import styled from "styled-components"
+import { useEffect } from "react"
+import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from "constants"
 
 export const Login = () => {
   const history = useHistory()
   const api = useAppApiClient()
   const { setToken, setUser } = useContext(AuthenticationContext)
   const login = useAsync<LoginResponse | undefined | null, LoginRequest>(api.login)
-  const handleLogin = (email: string, password: string) => {
-    const result = login.run({ email: email, password: password })
+  const handleLogin = async (email: string, password: string) => {
+    const result = await login.run({ email: email, password: password })
     if (!result) return
-    const { data, error } = login
-    if (error === null && data) {
-      setToken(data.token)
-      setUser(data.user)
-      history.replace("/")
-    }
+    setToken(result.token)
+    setUser(result.user)
+    history.replace("/")
   }
-
   const {
     value: email,
     isValueValid: emailiIsValid,
