@@ -1,11 +1,11 @@
-import React from "react"
+import { useState, useEffect, useCallback } from "react"
 
 const UseAsync = <T, TData>(asyncFunction: (...data: TData[]) => Promise<T>, active: boolean = false) => {
-  const [loading, setLoading] = React.useState<boolean>(false)
-  const [data, setData] = React.useState<T>()
-  const [error, setError] = React.useState<any>(null)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [data, setData] = useState<T>()
+  const [error, setError] = useState<any>(null)
 
-  const fetch = React.useCallback(async (...data: TData[]) => {
+  const fetch = useCallback(async (...data: TData[]) => {
     setLoading(true)
     setError(null)
     try {
@@ -20,7 +20,7 @@ const UseAsync = <T, TData>(asyncFunction: (...data: TData[]) => Promise<T>, act
     }
   }, [])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (active) fetch()
   }, [])
 

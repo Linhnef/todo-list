@@ -1,66 +1,44 @@
-import { useContext } from "react"
+import { useContext, useState, useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import { EmptyLayout } from "../layouts/EmptyLayout"
 import { AuthenticationContext } from "../contexts/authenticationContext"
-import { TextField, Dialog } from "@material-ui/core"
+import { Dialog, Typography } from "@material-ui/core"
 import { useInput } from "../hooks/useInput"
 import styled from "styled-components"
-
-export const Form = styled.form`
-  position: relative;
-  width: 100%;
-`
-export const FormTextField = styled(TextField)`
-  margin: 20px;
-  width: 95%;
-  height: 30px;
-  border: 1px solid black;
-  &:focus {
-    background-color: orange;
-  }
-`
-export const FormLabel = styled.label`
-  color: black;
-  font-size: 25px;
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
-  font-style: oblique;
-`
-
-export const FormButton = styled.button`
-  position: absolute;
-  top: -1em;
-  right: 1.4em;
-  font-size: 20px;
-  width: 100px;
-  background-color: white;
-  &:hover {
-    background-color: black;
-    color: white;
-    cursor: pointer;
-  }
-`
-
-export const FormControl = styled.div`
-  padding: 30px;
-  margin-left: 30px;
-  margin-top: 50px;
-  width: 80%;
-  border-bottom: 1px solid black;
-  background-color: white;
-`
+import { UseAppApiClient } from "../hooks/useAppApiClient"
+import UseAsync from "../hooks/useAsync"
+import { Fragment } from "react"
+import { LoginResponse, RegisterRequest } from "../services/api/createAppApiClient"
+import { InputOutlined } from "../components/inputs/InputOutlined"
+import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 
 export const Register = () => {
   const history = useHistory()
-  const { register } = useContext(AuthenticationContext)
+  const api = UseAppApiClient()
+  const { setToken, setUser } = useContext(AuthenticationContext)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<any>(null)
+  const useRegister = UseAsync<LoginResponse | undefined, RegisterRequest>(api.register)
+
   const handleSignUp = async (username: string, email: string, password: string, age: number) => {
-    register({
+    useRegister.fetch({
       name: username,
       email: email,
       password: password,
       age: age,
     })
-    history.push("/")
   }
+
+  useEffect(() => {
+    const { data, loading, error } = useRegister
+    setLoading(loading)
+    setError(error)
+    if (error == null && data !== undefined) {
+      setToken(data?.token)
+      setUser(data?.user)
+      history.replace("/")
+    }
+  }, [useRegister.loading])
   const {
     value: email,
     isValueValid: emailiIsValid,
@@ -69,7 +47,6 @@ export const Register = () => {
     valueChangeHanlder: emailHanldeChange,
     reset: resetInputEmail,
   } = useInput((value) => value.trim().includes("@"))
-
   const {
     value: name,
     isValueValid: nameiIsValid,
@@ -116,52 +93,72 @@ export const Register = () => {
   }
 
   return (
-    <EmptyLayout>
-      <Dialog open>
-        <FormControl>
-          <Form>
-            <FormLabel htmlFor="email">Email</FormLabel>
-            <FormTextField
-              error={emailInputHasError ? true : false}
-              value={email}
-              onChange={emailHanldeChange}
-              id="email"
-              type="text"
-              onBlur={handleEmailBlur}
-            ></FormTextField>
-            <FormLabel htmlFor="name">Name</FormLabel>
-            <FormTextField
-              error={nameInputHasError ? true : false}
-              value={name}
-              onChange={nameHanldeChange}
-              id="name"
-              type="text"
-              onBlur={handleNameBlur}
-            ></FormTextField>
-            <FormLabel htmlFor="password">Password</FormLabel>
-            <FormTextField
-              error={passwordInputHasError ? true : false}
-              value={password}
-              onChange={passwordHanldeChange}
-              id="password"
-              type="password"
-              onBlur={handlePasswordlBlur}
-            ></FormTextField>
-            <FormLabel htmlFor="age">Age</FormLabel>
-            <FormTextField
-              error={age ? true : false}
-              value={age}
-              onChange={ageHanldeChange}
-              id="age"
-              type="number"
-              onBlur={handleAgelBlur}
-            ></FormTextField>
-            <FormButton onClick={handleRegister} type="button" disabled={!formValid}>
-              Register
-            </FormButton>
-          </Form>
-        </FormControl>
-      </Dialog>
-    </EmptyLayout>
+    <Fragment>
+      {!(error === null) ? (
+        <Typography variant="h1">Erorr</Typography>
+      ) : (
+        <EmptyLayout>
+          <Dialog open>
+            <FormControl>
+              <Form>
+                <InputOutlined
+                  label="Email"
+                  error={emailInputHasError ? true : false}
+                  value={email}
+                  onChange={emailHanldeChange}
+                  id="email"
+                  type="text"
+                  onBlur={handleEmailBlur}
+                ></InputOutlined>
+                <InputOutlined
+                  label="Name"
+                  error={nameInputHasError ? true : false}
+                  value={name}
+                  onChange={nameHanldeChange}
+                  id="name"
+                  type="text"
+                  onBlur={handleNameBlur}
+                ></InputOutlined>
+                <InputOutlined
+                  label="Password"
+                  error={passwordInputHasError ? true : false}
+                  value={password}
+                  onChange={passwordHanldeChange}
+                  id="password"
+                  type="password"
+                  onBlur={handlePasswordlBlur}
+                ></InputOutlined>
+                <InputOutlined
+                  label="Age"
+                  error={age ? true : false}
+                  value={age}
+                  onChange={ageHanldeChange}
+                  id="age"
+                  type="number"
+                  onBlur={handleAgelBlur}
+                ></InputOutlined>
+                <ButtonOutlined onClick={handleRegister} type="button" disabled={!formValid}>
+                  Register
+                </ButtonOutlined>
+              </Form>
+            </FormControl>
+          </Dialog>
+        </EmptyLayout>
+      )}
+    </Fragment>
   )
 }
+
+export const Form = styled.form`
+  position: relative;
+  width: 100%;
+`
+
+export const FormControl = styled.div`
+  padding: 30px;
+  margin-left: 30px;
+  margin-top: 50px;
+  width: 80%;
+  border-bottom: 1px solid black;
+  background-color: white;
+`

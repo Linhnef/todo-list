@@ -9,16 +9,16 @@ import { AuthenticationContext } from "./contexts/authenticationContext"
 import { UpdateUser } from "./pages/UpdateUser"
 
 function App() {
-  const { isLogin } = useContext(AuthenticationContext)
+  const { token } = useContext(AuthenticationContext)
 
   return (
     <Switch>
       <Route exact path="/">
-        {isLogin && <Home />}
+        {token && <Home />}
       </Route>
-      <Route path="/login">{!isLogin && <Login />}</Route>
-      <Route path="/register" component={Register}></Route>
-      <Route path="/updateUser" component={UpdateUser}></Route>
+      <Route path="/login">{!token && <Login />}</Route>
+      <Route path="/register"> {!token && <Register />}</Route>
+      <Route path="/updateUser">{token && <UpdateUser />}</Route>
     </Switch>
   )
 }

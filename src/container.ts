@@ -5,8 +5,7 @@ import { createAppApiClient } from "./services/api/createAppApiClient"
 
 const config = getAppConfig()
 const links = getAppLinks()
-export const api = createApiClient({ baseURL: config.api.host })
-const apiClient = createAppApiClient(api);
+const apiClient = createAppApiClient(createApiClient({ baseURL: config.api.host }))
 
 export const getAppContainer = () => ({
   config,

@@ -7,11 +7,11 @@ export const createAppApiClient = (api: AxiosInstance) => {
     register: register(api),
     logout: logout(api),
     getCurrentUser: getCurrentUser(api),
-    updateCurrentUser : updateCurrentUser(api)
+    updateCurrentUser: updateCurrentUser(api),
   }
 }
 
-type LoginResponse = {
+export type LoginResponse = {
   token: string
   user: User
 }
@@ -25,10 +25,10 @@ export type RegisterRequest = {
 
 const register =
   (api: AxiosInstance) =>
-  async (data: RegisterRequest): Promise<string | undefined> => {
+  async (data: RegisterRequest): Promise<LoginResponse | undefined> => {
     try {
       const res = await api.post<LoginResponse>("/user/register", data)
-      return res.data.token
+      return res.data
     } catch (err) {
       return err
     }
@@ -41,10 +41,10 @@ export type LoginRequest = {
 
 const login =
   (api: AxiosInstance) =>
-  async (data: LoginRequest): Promise<string | undefined> => {
+  async (data: LoginRequest): Promise<LoginResponse | undefined> => {
     try {
       const res = await api.post<LoginResponse>("/user/login", data)
-      return res.data.token
+      return res.data
     } catch (err) {
       return err
     }
@@ -72,7 +72,6 @@ const getCurrentUser = (api: AxiosInstance) => async (): Promise<User | undefine
   }
 }
 
-
 export type UpdateCurrentUserRequest = {
   name?: string
   email?: string
@@ -93,4 +92,3 @@ const updateCurrentUser =
       return err
     }
   }
-

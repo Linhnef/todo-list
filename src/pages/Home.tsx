@@ -7,6 +7,9 @@ import { useContext, useState, useEffect } from "react"
 import { ButtonSecondary } from "../components/buttons/ButtonSecondary"
 import { NavLink } from "react-router-dom"
 import styled from "styled-components"
+import { UseAppApiClient } from "../hooks/useAppApiClient"
+import UseAsync from "../hooks/useAsync"
+import { User } from "../services/api/types/User"
 
 const RequireLoginCard = styled.h2`
   text-align: center;
@@ -17,33 +20,37 @@ const ProfileTitle = styled(Grid)`
 `
 
 export const Home = () => {
-  const { isLogin, user, getCurrentUser, logout } = useContext(AuthenticationContext)
+  const api = UseAppApiClient()
+  const { user,setToken } = useContext(AuthenticationContext)
   const [profileDialogStatus, setProfileDialogStatus] = useState(false)
+  const [error, setError] = useState(null)
   const history = useHistory()
+  const useLogout = UseAsync<boolean | undefined, {}>(api.logout)
   const handleLogout = async () => {
-    if (isLogin) {
-      logout()
-      history.push("/login")
-    }
+    useLogout.fetch()
   }
 
   const handleProfileStatusDIalogChange = () => {
     setProfileDialogStatus(!profileDialogStatus)
   }
-  const loadProfile = async () => {
-    if (isLogin) getCurrentUser()
-  }
+
   useEffect(() => {
-    loadProfile()
-  }, [])
+    const { data, error } = useLogout
+    setError(error)
+    if (data) {
+      setToken(undefined)
+      localStorage.clear()
+      history.replace("/login")
+    }
+  }, [useLogout.loading])
   return (
     <MainLayout>
       <h1>WELL COME HOME !!!</h1>
-      <ButtonOutlined text="PROFILE" onclick={handleProfileStatusDIalogChange}></ButtonOutlined>
+      <ButtonOutlined onClick={handleProfileStatusDIalogChange}>PROFILE</ButtonOutlined>
       <NavLink to="/updateUser">Update User</NavLink>
-      <ButtonSecondary logout={handleLogout}></ButtonSecondary>
+      <ButtonSecondary onClick={handleLogout}>Logout</ButtonSecondary>
       <Dialog open={profileDialogStatus} onClose={handleProfileStatusDIalogChange}>
-        {user !== undefined ? (
+        {error === null ? (
           <ProfileTitle>
             <h2>Profile</h2>
             <h4>

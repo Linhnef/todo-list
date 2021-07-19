@@ -1,3 +1,3 @@
-import { getAppContainer } from "../container";
+import { getAppContainer } from "../container"
 
-export const useConfig = () => getAppContainer().config;
+export const useConfig = () => getAppContainer().config

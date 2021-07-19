@@ -1,13 +1,8 @@
 import { Button } from "@material-ui/core"
+import styled from "styled-components"
 
-interface ButtonSecondaryProps {
-  logout: () => void
-}
-
-export const ButtonSecondary = (props: ButtonSecondaryProps) => {
-  return (
-    <Button onClick={props.logout} variant="contained" color="secondary">
-      Logout
-    </Button>
-  )
-}
+export const ButtonSecondary = styled(Button).attrs((props) => ({
+  variant: "outlined",
+  color: "secondary",
+  ...props,
+}))``
