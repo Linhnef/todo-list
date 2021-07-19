@@ -5,34 +5,29 @@ import { Fragment, useContext } from "react"
 import { Dialog, Typography } from "@material-ui/core"
 import { useInput } from "../hooks/useInput"
 import { Form, FormControl } from "./Register"
-import UseAsync from "../hooks/useAsync"
-import { UseAppApiClient } from "../hooks/useAppApiClient"
+import useAsync from "../hooks/useAsync"
+import { useAppApiClient } from "../hooks/useAppApiClient"
 import { LoginRequest, LoginResponse } from "../services/api/createAppApiClient"
 import { useEffect, useState } from "react"
 import { InputOutlined } from "../components/inputs/InputOutlined"
 import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
+import styled from "styled-components"
 
 export const Login = () => {
   const history = useHistory()
-  const api = UseAppApiClient()
+  const api = useAppApiClient()
   const { setToken, setUser } = useContext(AuthenticationContext)
-  const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<any>(null)
-  const useLogin = UseAsync<LoginResponse | undefined, LoginRequest>(api.login)
+  const login = useAsync<LoginResponse | undefined | null, LoginRequest>(api.login)
   const handleLogin = async (email: string, password: string) => {
-    useLogin.fetch({ email: email, password: password })
-  }
-
-  useEffect(() => {
-    const { data, loading, error } = useLogin
-    setLoading(loading)
-    setError(error)
-    if (error == null && data !== undefined) {
+    const result = login.run({ email: email, password: password })
+    if (!result) return
+    const { data, error } = login
+    if (error === null && data) {
       setToken(data.token)
       setUser(data.user)
       history.replace("/")
     }
-  }, [useLogin.loading])
+  }
 
   const {
     value: email,
@@ -67,14 +62,14 @@ export const Login = () => {
   }
   return (
     <Fragment>
-      {!(error === null) ? (
+      {!(login.error === null) ? (
         <Typography variant="h1">Erorr</Typography>
       ) : (
         <EmptyLayout>
           <Dialog open>
             <FormControl>
               <Form>
-                <InputOutlined
+                <LoginInputOutlined
                   label="Email"
                   error={emailInputHasError ? true : false}
                   value={email}
@@ -82,8 +77,8 @@ export const Login = () => {
                   id="email"
                   type="text"
                   onBlur={handleEmailBlur}
-                ></InputOutlined>
-                <InputOutlined
+                ></LoginInputOutlined>
+                <LoginInputOutlined
                   label="Password"
                   error={passwordInputHasError ? true : false}
                   value={password}
@@ -91,7 +86,7 @@ export const Login = () => {
                   id="password"
                   type="password"
                   onBlur={handlePasswordlBlur}
-                ></InputOutlined>
+                ></LoginInputOutlined>
                 <ButtonOutlined onClick={loginHandle} type="button" disabled={!formValid}>
                   Login
                 </ButtonOutlined>
@@ -103,3 +98,8 @@ export const Login = () => {
     </Fragment>
   )
 }
+
+const LoginInputOutlined = styled(InputOutlined)`
+  width: 90%;
+  height: 30%;
+`

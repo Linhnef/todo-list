@@ -1,60 +1,34 @@
-import { useState, createContext } from "react"
+import { useState, createContext, ReactNode } from "react"
 import { User } from "../services/api/types/User"
 
-interface ContextProps {
-  user: User
+interface AuthenticationContextProps {
+  user: User | null
   setUser: (data: User) => void
   token: string | undefined | null
-  setToken: (data: string | undefined | null) => void
+  setToken: (data: string | null) => void
 }
 
-const initialUser = {
-  age: 0,
-  email: "",
-  name: "",
-  password: "",
-}
-
-export const AuthenticationContext = createContext<ContextProps>({
-  user: initialUser,
-  setUser: (data: User) => {},
+export const AuthenticationContext = createContext<AuthenticationContextProps>({
+  user: null,
+  setUser: (data: User | null) => {},
   token: undefined,
-  setToken: (data: string | undefined | null) => {},
+  setToken: (data: string | null) => {},
 })
-
-const retrieveStoredToken = () => {
-  const storedToken = localStorage.getItem("token")
-  return {
-    token: storedToken,
-  }
-}
-interface autheChildren {
-  children: any
+interface AuthenticationContextProviderProps {
+  children: ReactNode
 }
 
-export const AuthenticationContextProvider = (props: autheChildren) => {
-  const tokenData = retrieveStoredToken()
-  let initialToken
-  if (tokenData) {
-    initialToken = tokenData.token
-  }
-  const [user, setUser] = useState<User>(initialUser)
-  const [token, setToken] = useState<string | undefined | null>(initialToken)
+export const AuthenticationContextProvider = (props: AuthenticationContextProviderProps) => {
+  const tokenData = localStorage.getItem("token")
+  const [user, setUser] = useState<User | null>(null)
+  const [token, setToken] = useState<string | null>(tokenData ? tokenData : null)
   token ? localStorage.setItem("token", token) : localStorage.clear()
 
-  const handleSetUser = (data: User) => {
-    setUser(data)
-  }
-
-  const handleSetToken = (data: string | undefined | null) => {
-    setToken(data)
-  }
-
-  const contextValue: ContextProps = {
+  const contextValue: AuthenticationContextProps = {
     user: user,
     token: token,
-    setUser: handleSetUser,
-    setToken: handleSetToken,
+    setUser,
+    setToken,
   }
   return <AuthenticationContext.Provider value={contextValue}>{props.children}</AuthenticationContext.Provider>
 }

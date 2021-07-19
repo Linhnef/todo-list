@@ -1,12 +1,12 @@
-import { useContext, useState, useEffect } from "react"
+import { useContext, useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import { EmptyLayout } from "../layouts/EmptyLayout"
 import { AuthenticationContext } from "../contexts/authenticationContext"
 import { Dialog, Typography } from "@material-ui/core"
 import { useInput } from "../hooks/useInput"
 import styled from "styled-components"
-import { UseAppApiClient } from "../hooks/useAppApiClient"
-import UseAsync from "../hooks/useAsync"
+import { useAppApiClient } from "../hooks/useAppApiClient"
+import useAsync from "../hooks/useAsync"
 import { Fragment } from "react"
 import { LoginResponse, RegisterRequest } from "../services/api/createAppApiClient"
 import { InputOutlined } from "../components/inputs/InputOutlined"
@@ -14,31 +14,26 @@ import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 
 export const Register = () => {
   const history = useHistory()
-  const api = UseAppApiClient()
+  const api = useAppApiClient()
   const { setToken, setUser } = useContext(AuthenticationContext)
-  const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<any>(null)
-  const useRegister = UseAsync<LoginResponse | undefined, RegisterRequest>(api.register)
+  const register = useAsync<LoginResponse | undefined | null, RegisterRequest>(api.register)
 
   const handleSignUp = async (username: string, email: string, password: string, age: number) => {
-    useRegister.fetch({
+    const result = register.run({
       name: username,
       email: email,
       password: password,
       age: age,
     })
-  }
-
-  useEffect(() => {
-    const { data, loading, error } = useRegister
-    setLoading(loading)
-    setError(error)
-    if (error == null && data !== undefined) {
-      setToken(data?.token)
-      setUser(data?.user)
+    if (!result) return
+    const { data, error } = register
+    if (error === null && data) {
+      setToken(data.token)
+      setUser(data.user)
       history.replace("/")
     }
-  }, [useRegister.loading])
+  }
+
   const {
     value: email,
     isValueValid: emailiIsValid,
@@ -94,14 +89,14 @@ export const Register = () => {
 
   return (
     <Fragment>
-      {!(error === null) ? (
+      {!(register.error === null) ? (
         <Typography variant="h1">Erorr</Typography>
       ) : (
         <EmptyLayout>
           <Dialog open>
             <FormControl>
               <Form>
-                <InputOutlined
+                <RegisternputOutlined
                   label="Email"
                   error={emailInputHasError ? true : false}
                   value={email}
@@ -109,8 +104,8 @@ export const Register = () => {
                   id="email"
                   type="text"
                   onBlur={handleEmailBlur}
-                ></InputOutlined>
-                <InputOutlined
+                ></RegisternputOutlined>
+                <RegisternputOutlined
                   label="Name"
                   error={nameInputHasError ? true : false}
                   value={name}
@@ -118,8 +113,8 @@ export const Register = () => {
                   id="name"
                   type="text"
                   onBlur={handleNameBlur}
-                ></InputOutlined>
-                <InputOutlined
+                ></RegisternputOutlined>
+                <RegisternputOutlined
                   label="Password"
                   error={passwordInputHasError ? true : false}
                   value={password}
@@ -127,8 +122,8 @@ export const Register = () => {
                   id="password"
                   type="password"
                   onBlur={handlePasswordlBlur}
-                ></InputOutlined>
-                <InputOutlined
+                ></RegisternputOutlined>
+                <RegisternputOutlined
                   label="Age"
                   error={age ? true : false}
                   value={age}
@@ -136,7 +131,7 @@ export const Register = () => {
                   id="age"
                   type="number"
                   onBlur={handleAgelBlur}
-                ></InputOutlined>
+                ></RegisternputOutlined>
                 <ButtonOutlined onClick={handleRegister} type="button" disabled={!formValid}>
                   Register
                 </ButtonOutlined>
@@ -161,4 +156,9 @@ export const FormControl = styled.div`
   width: 80%;
   border-bottom: 1px solid black;
   background-color: white;
+`
+
+const RegisternputOutlined = styled(InputOutlined)`
+  width: 90%;
+  height: 30%;
 `

@@ -16,7 +16,7 @@ export const createApiClient = (args: CreateApiClientArgs): AxiosInstance => {
   })
 
   api.interceptors.request.use((config) => {
-    let token = getLocalToken()
+    const token = getLocalToken()
     config.headers = Object.assign(
       {
         Authorization: `Bearer ${token}`,
@@ -25,18 +25,6 @@ export const createApiClient = (args: CreateApiClientArgs): AxiosInstance => {
     )
     return config
   })
-
-  api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      const status = error.response ? error.response.status : null
-      if (status) {
-        localStorage.clear()
-        window.location.href = "/login"
-      }
-      return Promise.reject(error)
-    }
-  )
 
   return api
 }

@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from "react"
 
-const UseAsync = <T, TData>(asyncFunction: (...data: TData[]) => Promise<T>, active: boolean = false) => {
+const useAsync = <T, TData>(asyncFunction: (...data: TData[]) => Promise<T>, active: boolean = false) => {
   const [loading, setLoading] = useState<boolean>(false)
-  const [data, setData] = useState<T>()
+  const [data, setData] = useState<T | null>(null)
   const [error, setError] = useState<any>(null)
 
-  const fetch = useCallback(async (...data: TData[]) => {
+  const run = useCallback(async (...data: TData[]) => {
     setLoading(true)
     setError(null)
     try {
@@ -21,10 +21,10 @@ const UseAsync = <T, TData>(asyncFunction: (...data: TData[]) => Promise<T>, act
   }, [])
 
   useEffect(() => {
-    if (active) fetch()
+    if (active) run()
   }, [])
 
-  return { loading, data, error, fetch }
+  return { loading, data, error, run }
 }
 
-export default UseAsync
+export default useAsync

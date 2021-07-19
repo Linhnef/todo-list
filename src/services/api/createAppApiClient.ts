@@ -25,12 +25,12 @@ export type RegisterRequest = {
 
 const register =
   (api: AxiosInstance) =>
-  async (data: RegisterRequest): Promise<LoginResponse | undefined> => {
+  async (data: RegisterRequest): Promise<LoginResponse | undefined | null> => {
     try {
       const res = await api.post<LoginResponse>("/user/register", data)
       return res.data
     } catch (err) {
-      return err
+      return null
     }
   }
 
@@ -41,12 +41,12 @@ export type LoginRequest = {
 
 const login =
   (api: AxiosInstance) =>
-  async (data: LoginRequest): Promise<LoginResponse | undefined> => {
+  async (data: LoginRequest): Promise<LoginResponse | undefined | null> => {
     try {
       const res = await api.post<LoginResponse>("/user/login", data)
       return res.data
     } catch (err) {
-      return err
+      return null
     }
   }
 
@@ -54,21 +54,21 @@ type LogoutResponse = {
   success: boolean
 }
 
-const logout = (api: AxiosInstance) => async (): Promise<boolean | undefined> => {
+const logout = (api: AxiosInstance) => async (): Promise<boolean | undefined | null> => {
   try {
     const res = await api.post<LogoutResponse>("/user/logout")
     return res.data.success
   } catch (err) {
-    return err
+    return null
   }
 }
 
-const getCurrentUser = (api: AxiosInstance) => async (): Promise<User | undefined> => {
+const getCurrentUser = (api: AxiosInstance) => async (): Promise<User | undefined | null> => {
   try {
     const res = await api.get<User>("/user/me")
     return res.data
   } catch (err) {
-    return err
+    return null
   }
 }
 
@@ -84,11 +84,11 @@ type UpdateCUrrentUserResponse = {
 
 const updateCurrentUser =
   (api: AxiosInstance) =>
-  async (data: UpdateCurrentUserRequest): Promise<User | undefined> => {
+  async (data: UpdateCurrentUserRequest): Promise<User | undefined | null> => {
     try {
       const res = await api.put<UpdateCUrrentUserResponse>("/user/me", data)
       return res.data.data
     } catch (err) {
-      return err
+      return null
     }
   }
