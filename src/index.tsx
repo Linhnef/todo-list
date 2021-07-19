@@ -9,9 +9,7 @@ import { AuthenticationContextProvider } from "./contexts/authenticationContext"
 ReactDOM.render(
   <AuthenticationContextProvider>
     <BrowserRouter>
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
+      <App />
     </BrowserRouter>
   </AuthenticationContextProvider>,
   document.getElementById("root")

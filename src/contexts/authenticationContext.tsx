@@ -19,9 +19,8 @@ interface AuthenticationContextProviderProps {
 }
 
 export const AuthenticationContextProvider = (props: AuthenticationContextProviderProps) => {
-  const tokenData = localStorage.getItem("token")
   const [user, setUser] = useState<User | null>(null)
-  const [token, setToken] = useState<string | null>(tokenData ? tokenData : null)
+  const [token, setToken] = useState<string | null>(null)
   token ? localStorage.setItem("token", token) : localStorage.clear()
 
   const contextValue: AuthenticationContextProps = {

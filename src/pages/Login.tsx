@@ -18,7 +18,7 @@ export const Login = () => {
   const api = useAppApiClient()
   const { setToken, setUser } = useContext(AuthenticationContext)
   const login = useAsync<LoginResponse | undefined | null, LoginRequest>(api.login)
-  const handleLogin = async (email: string, password: string) => {
+  const handleLogin = (email: string, password: string) => {
     const result = login.run({ email: email, password: password })
     if (!result) return
     const { data, error } = login
