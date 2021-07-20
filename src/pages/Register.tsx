@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react"
+import { useContext, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { EmptyLayout } from "../layouts/EmptyLayout"
 import { AuthenticationContext } from "../contexts/authenticationContext"
@@ -16,6 +16,7 @@ export const Register = () => {
   const history = useHistory()
   const api = useAppApiClient()
   const { setToken, setUser } = useContext(AuthenticationContext)
+  const [formValid, setFormValid] = useState(false)
   const register = useAsync<LoginResponse | undefined | null, RegisterRequest>(api.register)
 
   const handleSignUp = async (username: string, email: string, password: string, age: number) => {
@@ -65,9 +66,9 @@ export const Register = () => {
     valueChangeHanlder: ageHanldeChange,
     reset: resetInputAge,
   } = useInput((value) => parseInt(value) > 0)
-
-  let formValid = false
-  if (!nameInputHasError && !passwordInputHasError && !emailInputHasError && !ageInputHasError) formValid = true
+  const validFormHandler = () => {
+    if (!passwordInputHasError && !emailInputHasError && !ageInputHasError && !nameInputHasError) setFormValid(true)
+  }
   const handleRegister = (event: any) => {
     event.preventDefault()
     handleNameBlur(true)
@@ -92,7 +93,7 @@ export const Register = () => {
         <EmptyLayout>
           <Dialog open>
             <FormControl>
-              <Form>
+              <Form onChange={validFormHandler}>
                 <RegisternputOutlined
                   label="Email"
                   error={emailInputHasError ? true : false}

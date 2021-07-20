@@ -1,7 +1,7 @@
 import { useHistory } from "react-router-dom"
 import { EmptyLayout } from "../layouts/EmptyLayout"
 import { AuthenticationContext } from "../contexts/authenticationContext"
-import { Fragment, useContext } from "react"
+import { Fragment, useContext, useState } from "react"
 import { Dialog, Typography } from "@material-ui/core"
 import { useInput } from "../hooks/useInput"
 import { Form, FormControl } from "./Register"
@@ -11,13 +11,12 @@ import { LoginRequest, LoginResponse } from "../services/api/createAppApiClient"
 import { InputOutlined } from "../components/inputs/InputOutlined"
 import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 import styled from "styled-components"
-import { useEffect } from "react"
-import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from "constants"
 
 export const Login = () => {
   const history = useHistory()
   const api = useAppApiClient()
   const { setToken, setUser } = useContext(AuthenticationContext)
+  const [formValid, setFormValid] = useState(false)
   const login = useAsync<LoginResponse | undefined | null, LoginRequest>(api.login)
   const handleLogin = async (email: string, password: string) => {
     const result = await login.run({ email: email, password: password })
@@ -35,6 +34,10 @@ export const Login = () => {
     reset: resetInputEmail,
   } = useInput((value) => value.trim().includes("@"))
 
+  const validFormHandler = () => {
+    if (!passwordInputHasError && !emailInputHasError) setFormValid(true)
+  }
+
   const {
     value: password,
     isValueValid: passwordInputValid,
@@ -44,8 +47,6 @@ export const Login = () => {
     reset: resetInputpassword,
   } = useInput((value) => value.trim() !== "" && value.trim().length > 6)
 
-  let formValid = false
-  if (!passwordInputHasError && !emailInputHasError) formValid = true
   const loginHandle = (event: any) => {
     event.preventDefault()
     handleEmailBlur(true)
@@ -65,7 +66,7 @@ export const Login = () => {
         <EmptyLayout>
           <Dialog open>
             <FormControl>
-              <Form>
+              <Form onChange={validFormHandler}>
                 <LoginInputOutlined
                   label="Email"
                   error={emailInputHasError ? true : false}

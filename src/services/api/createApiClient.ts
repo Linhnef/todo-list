@@ -4,11 +4,6 @@ export type CreateApiClientArgs = {
   baseURL?: string
 }
 
-function getLocalToken() {
-  const token = window.localStorage.getItem("token")
-  return token
-}
-
 export const createApiClient = (args: CreateApiClientArgs): AxiosInstance => {
   const { baseURL } = args
   const api = axios.create({
@@ -16,7 +11,7 @@ export const createApiClient = (args: CreateApiClientArgs): AxiosInstance => {
   })
 
   api.interceptors.request.use((config) => {
-    const token = getLocalToken()
+    const token = localStorage.getItem("token")
     config.headers = Object.assign(
       {
         Authorization: `Bearer ${token}`,
