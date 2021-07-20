@@ -5,4 +5,8 @@ export const ButtonSecondary = styled(Button).attrs((props) => ({
   variant: "outlined",
   color: "secondary",
   ...props,
-}))``
+}))`
+  &:hover {
+    cursor: pointer;
+  }
+`
