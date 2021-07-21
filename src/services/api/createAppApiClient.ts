@@ -10,10 +10,8 @@ export const createAppApiClient = (api: AxiosInstance) => {
     getCurrentUser: getCurrentUser(api),
     updateCurrentUser: updateCurrentUser(api),
     addTask: addTask(api),
-    getAllTask: getAllTask(api),
+    getTask: getTask(api),
     getTaskById: getTaskById(api),
-    getTaskByCompleted: getTaskByCompleted(api),
-    getTaskByPagnigation: getTaskByPagnigation(api),
     UpdateTaskById: UpdateTaskById(api),
     DeleteById: DeleteById(api),
     UploadImage: UploadImage(api),
@@ -86,17 +84,17 @@ export type UpdateCurrentUserRequest = {
   email?: string
   age?: number
 }
-type UpdateCUrrentUserResponse = {
+export type UpdateCurrentUserResponse = {
   success: boolean
   data: User
 }
 
 const updateCurrentUser =
   (api: AxiosInstance) =>
-  async (data: UpdateCurrentUserRequest): Promise<User | undefined | null> => {
+  async (data: UpdateCurrentUserRequest): Promise<UpdateCurrentUserResponse | undefined | null> => {
     try {
-      const res = await api.put<UpdateCUrrentUserResponse>("/user/me", data)
-      return res.data.data
+      const res = await api.put<UpdateCurrentUserResponse>("/user/me", data)
+      return res.data
     } catch (err) {
       return null
     }
@@ -120,18 +118,6 @@ const addTask =
     } catch (err) {}
   }
 
-type GetAllTaskResponse = {
-  count: number
-  data: Task[]
-}
-
-const getAllTask = (api: AxiosInstance) => async (): Promise<Task[] | undefined | null> => {
-  try {
-    const res = await api.get<GetAllTaskResponse>("/task")
-    return res.data.data
-  } catch (err) {}
-}
-
 type GetTaskByIdResponse = {
   success: boolean
   data: Task
@@ -150,49 +136,27 @@ const getTaskById =
     } catch (err) {}
   }
 
-export type GetTaskByCompletedRequest = {
-  completed: boolean
-}
-
-type GetTaskByCompeletdResponse = {
+type GetAllTaskResponse = {
   count: number
   data: Task[]
 }
 
-const getTaskByCompleted =
+export type GetTaskRequest = {
+  params?: {
+    completed?: boolean
+    limit?: number
+    skip?: number
+  }
+}
+
+const getTask =
   (api: AxiosInstance) =>
-  async (data: GetTaskByCompletedRequest): Promise<Task[] | undefined | null> => {
+  async (data: GetTaskRequest): Promise<Task[] | undefined | null> => {
     try {
-      const res = await api.get<GetTaskByCompeletdResponse>("/task", {
-        params: {
-          completed: data.completed,
-        },
+      const res = await api.get<GetAllTaskResponse>("/task", {
+        data,
       })
       return res.data.data
-    } catch (err) {}
-  }
-
-export type GetTaskByPagnigationRequest = {
-  limit: number
-  skip: number
-}
-
-type GetTaskByPanigationResponse = {
-  count: number
-  data: Task[]
-}
-
-const getTaskByPagnigation =
-  (api: AxiosInstance) =>
-  async (data: GetTaskByPagnigationRequest): Promise<GetTaskByPanigationResponse | undefined | null> => {
-    try {
-      const res = await api.get<GetTaskByPanigationResponse>("/task", {
-        params: {
-          limit: data.limit,
-          skip: data.skip,
-        },
-      })
-      return res.data
     } catch (err) {}
   }
 
@@ -214,7 +178,6 @@ const UpdateTaskById =
   async (data: UpdateTaskByIdRequest): Promise<Task | undefined | null> => {
     try {
       const res = await api.put<UpdateTaskByIdResponse>("/task/" + data._id, data.data)
-      console.log(res.data.success)
       return res.data.data
     } catch (err) {}
   }
@@ -249,7 +212,6 @@ const UploadImage =
   async (data: UploadImageRequest): Promise<boolean | undefined | null> => {
     try {
       const res = await api.delete<UploadResponse>("/user/me/avatar")
-      console.log(res.data.success)
       return res.data.success
     } catch (err) {}
   }

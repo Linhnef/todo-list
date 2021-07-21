@@ -5,7 +5,7 @@ import { AuthenticationContext } from "../contexts/authenticationContext"
 import { useContext, useState } from "react"
 import { NavLink } from "react-router-dom"
 import styled from "styled-components"
-import { Logout } from "./Logout"
+import { LogoutButton } from "./LogoutButton"
 
 export const Home = () => {
   const { user } = useContext(AuthenticationContext)
@@ -20,7 +20,7 @@ export const Home = () => {
       <ButtonOutlined onClick={handleProfileStatusDIalogChange}>PROFILE</ButtonOutlined>
       <NavLink to="/updateUser">Update User</NavLink>
       <NavLink to="/task">Task</NavLink>
-      <Logout />
+      <LogoutButton />
       <Dialog open={profileDialogStatus} onClose={handleProfileStatusDIalogChange}>
         {user ? (
           <ProfileTitle>

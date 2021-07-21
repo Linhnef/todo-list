@@ -5,10 +5,9 @@ import { useContext, useState } from "react"
 import { AuthenticationContext } from "../contexts/authenticationContext"
 import { useHistory } from "react-router"
 import styled from "styled-components"
-import { UpdateCurrentUserRequest } from "../services/api/createAppApiClient"
+import { UpdateCurrentUserRequest, UpdateCurrentUserResponse } from "../services/api/createAppApiClient"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
-import { User } from "../services/api/types/User"
 import { InputOutlined } from "../components/inputs/InputOutlined"
 
 export const UpdateUser = () => {
@@ -19,12 +18,14 @@ export const UpdateUser = () => {
   const [age, setAge] = useState<number>()
   const [email, setEmail] = useState<string>()
 
-  const updateUser = useAsync<User | undefined | null, UpdateCurrentUserRequest>(api.updateCurrentUser)
+  const updateUser = useAsync<UpdateCurrentUserResponse | undefined | null, UpdateCurrentUserRequest>(
+    api.updateCurrentUser
+  )
 
   const handleUpdate = async () => {
-    const result = await updateUser.run({ name: name, age, email })
-    if (!result) return
-    setUser(result.data)
+    const { data } = await updateUser.run({ name: name, age, email })
+    if (!data) return
+    setUser(data)
     history.replace("/")
   }
   return (
