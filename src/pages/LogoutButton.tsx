@@ -6,7 +6,7 @@ import { ButtonSecondary } from "../components/buttons/ButtonSecondary"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
 
-export const Logout = () => {
+export const LogoutButton = () => {
   const api = useAppApiClient()
   const { setToken } = useContext(AuthenticationContext)
   const history = useHistory()

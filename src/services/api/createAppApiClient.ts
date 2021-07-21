@@ -77,17 +77,17 @@ export type UpdateCurrentUserRequest = {
   email?: string
   age?: number
 }
-type UpdateCUrrentUserResponse = {
+export type UpdateCurrentUserResponse = {
   success: boolean
   data: User
 }
 
 const updateCurrentUser =
   (api: AxiosInstance) =>
-  async (data: UpdateCurrentUserRequest): Promise<User | undefined | null> => {
+  async (data: UpdateCurrentUserRequest): Promise<UpdateCurrentUserResponse | undefined | null> => {
     try {
-      const res = await api.put<UpdateCUrrentUserResponse>("/user/me", data)
-      return res.data.data
+      const res = await api.put<UpdateCurrentUserResponse>("/user/me", data)
+      return res.data
     } catch (err) {
       return null
     }

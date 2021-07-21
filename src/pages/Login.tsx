@@ -35,7 +35,7 @@ export const Login = () => {
   } = useInput((value) => value.trim().includes("@"))
 
   const validFormHandler = () => {
-    if (!passwordInputHasError && !emailInputHasError) setFormValid(true)
+    setFormValid(!passwordInputHasError && !emailInputHasError)
   }
 
   const {

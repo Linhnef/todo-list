@@ -67,7 +67,7 @@ export const Register = () => {
     reset: resetInputAge,
   } = useInput((value) => parseInt(value) > 0)
   const validFormHandler = () => {
-    if (!passwordInputHasError && !emailInputHasError && !ageInputHasError && !nameInputHasError) setFormValid(true)
+    setFormValid(!passwordInputHasError && !emailInputHasError && !ageInputHasError && !nameInputHasError)
   }
   const handleRegister = (event: any) => {
     event.preventDefault()
