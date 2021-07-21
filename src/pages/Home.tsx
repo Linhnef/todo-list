@@ -19,6 +19,7 @@ export const Home = () => {
       <h1>WELL COME HOME !!!</h1>
       <ButtonOutlined onClick={handleProfileStatusDIalogChange}>PROFILE</ButtonOutlined>
       <NavLink to="/updateUser">Update User</NavLink>
+      <NavLink to="/task">Task</NavLink>
       <Logout />
       <Dialog open={profileDialogStatus} onClose={handleProfileStatusDIalogChange}>
         {user ? (
