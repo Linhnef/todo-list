@@ -10,11 +10,6 @@ export const createAppApiClient = (api: AxiosInstance) => {
     getCurrentUser: getCurrentUser(api),
     updateCurrentUser: updateCurrentUser(api),
     addTask: addTask(api),
-    getTask: getTask(api),
-    getTaskById: getTaskById(api),
-    UpdateTaskById: UpdateTaskById(api),
-    DeleteById: DeleteById(api),
-    UploadImage: UploadImage(api),
   }
 }
 
@@ -104,106 +99,6 @@ const addTask =
   async (data: AddTaskRequest): Promise<boolean | undefined | null> => {
     try {
       const res = await api.post<AddTaskResponse>("/task", data)
-      return res.data.success
-    } catch (err) {}
-  }
-
-export type GetTaskByIdResponse = {
-  success: boolean
-  data: Task
-}
-
-export type GetTaskByIdRequest = {
-  id: string
-}
-
-const getTaskById =
-  (api: AxiosInstance) =>
-  async (data: GetTaskByIdRequest): Promise<GetTaskByIdResponse | undefined | null> => {
-    try {
-      const res = await api.get<GetTaskByIdResponse>("/task/" + data.id)
-      return res.data
-    } catch (err) {}
-  }
-
-export type GetTaskResponse = {
-  count: number
-  data: Task[]
-}
-
-export type GetTaskRequest = {
-  completed?: boolean
-  limit?: number
-  skip?: number
-}
-
-const getTask =
-  (api: AxiosInstance) =>
-  async (data: GetTaskRequest): Promise<GetTaskResponse | undefined | null> => {
-    try {
-      const res = await api.get<GetTaskResponse>("/task", {
-        params: {
-          completed: data.completed,
-          limit: data.limit,
-          skip: data.skip,
-        },
-      })
-      return res.data
-    } catch (err) {}
-  }
-
-export type UpdateTaskByIdRequest = {
-  _id: string
-  data: {
-    completed?: boolean
-    description?: string
-  }
-}
-
-export type UpdateTaskByIdResponse = {
-  success: boolean
-  data: Task
-}
-
-const UpdateTaskById =
-  (api: AxiosInstance) =>
-  async (data: UpdateTaskByIdRequest): Promise<UpdateTaskByIdResponse | undefined | null> => {
-    try {
-      const res = await api.put<UpdateTaskByIdResponse>("/task/" + data._id, data.data)
-      return res.data
-    } catch (err) {}
-  }
-
-export type DeleteTaskByIdRequest = {
-  _id: string
-}
-
-export type DeleteTaskByIdResponse = {
-  success: boolean
-  data: Task
-}
-
-const DeleteById =
-  (api: AxiosInstance) =>
-  async (data: DeleteTaskByIdRequest): Promise<DeleteTaskByIdResponse | undefined | null> => {
-    try {
-      const res = await api.delete<DeleteTaskByIdResponse>("/task/" + data._id)
-      return res.data
-    } catch (err) {}
-  }
-
-type UploadResponse = {
-  success: boolean
-}
-
-export type UploadImageRequest = {
-  avatar: File
-}
-const UploadImage =
-  (api: AxiosInstance) =>
-  async (data: UploadImageRequest): Promise<boolean | undefined | null> => {
-    try {
-      const res = await api.delete<UploadResponse>("/user/me/avatar")
       return res.data.success
     } catch (err) {}
   }
