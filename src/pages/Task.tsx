@@ -47,6 +47,7 @@ const TaskTodo = () => {
     if (!response) return
     setTasks(response.data)
   })
+
   return (
     <>
       <TaskTodoHeader color="default" position="static">
@@ -56,6 +57,16 @@ const TaskTodo = () => {
               <TaskTodoHeaderBackground item>
                 <Typography variant="h3">TODO LIST</Typography>
               </TaskTodoHeaderBackground>
+              <TaskTodoListIcon onClick={() => getTask.run({ completed: true })}>
+                <Badge color="secondary">
+                  <CheckCircleOutlineIcon fontSize="large" />
+                </Badge>
+              </TaskTodoListIcon>
+              <TaskTodoListIcon onClick={() => getTask.run({ completed: false })}>
+                <Badge color="secondary">
+                  <CancelIcon fontSize="large" />
+                </Badge>
+              </TaskTodoListIcon>
               <TaskTodoListIcon
                 onClick={() => {
                   setIsAddOpen(true)
