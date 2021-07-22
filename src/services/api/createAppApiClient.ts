@@ -104,7 +104,7 @@ export type AddTaskRequest = {
   description: string
 }
 
-type AddTaskResponse = {
+export type AddTaskResponse = {
   success: boolean
   data: Task
 }
@@ -118,7 +118,7 @@ const addTask =
     } catch (err) {}
   }
 
-type GetTaskByIdResponse = {
+export type GetTaskByIdResponse = {
   success: boolean
   data: Task
 }
@@ -129,34 +129,36 @@ export type GetTaskByIdRequest = {
 
 const getTaskById =
   (api: AxiosInstance) =>
-  async (data: GetTaskByIdRequest): Promise<Task | undefined | null> => {
+  async (data: GetTaskByIdRequest): Promise<GetTaskByIdResponse | undefined | null> => {
     try {
       const res = await api.get<GetTaskByIdResponse>("/task/" + data.id)
-      return res.data.data
+      return res.data
     } catch (err) {}
   }
 
-type GetAllTaskResponse = {
+export type GetTaskResponse = {
   count: number
   data: Task[]
 }
 
 export type GetTaskRequest = {
-  params?: {
-    completed?: boolean
-    limit?: number
-    skip?: number
-  }
+  completed?: boolean
+  limit?: number
+  skip?: number
 }
 
 const getTask =
   (api: AxiosInstance) =>
-  async (data: GetTaskRequest): Promise<Task[] | undefined | null> => {
+  async (data: GetTaskRequest): Promise<GetTaskResponse | undefined | null> => {
     try {
-      const res = await api.get<GetAllTaskResponse>("/task", {
-        data,
+      const res = await api.get<GetTaskResponse>("/task", {
+        params: {
+          completed: data.completed,
+          limit: data.limit,
+          skip: data.skip,
+        },
       })
-      return res.data.data
+      return res.data
     } catch (err) {}
   }
 
@@ -168,17 +170,17 @@ export type UpdateTaskByIdRequest = {
   }
 }
 
-type UpdateTaskByIdResponse = {
+export type UpdateTaskByIdResponse = {
   success: boolean
   data: Task
 }
 
 const UpdateTaskById =
   (api: AxiosInstance) =>
-  async (data: UpdateTaskByIdRequest): Promise<Task | undefined | null> => {
+  async (data: UpdateTaskByIdRequest): Promise<UpdateTaskByIdResponse | undefined | null> => {
     try {
       const res = await api.put<UpdateTaskByIdResponse>("/task/" + data._id, data.data)
-      return res.data.data
+      return res.data
     } catch (err) {}
   }
 
@@ -186,17 +188,17 @@ export type DeleteTaskByIdRequest = {
   _id: string
 }
 
-type DeleteTaskByIdResponse = {
+export type DeleteTaskByIdResponse = {
   success: boolean
   data: Task
 }
 
 const DeleteById =
   (api: AxiosInstance) =>
-  async (data: DeleteTaskByIdRequest): Promise<boolean | undefined | null> => {
+  async (data: DeleteTaskByIdRequest): Promise<DeleteTaskByIdResponse | undefined | null> => {
     try {
       const res = await api.delete<DeleteTaskByIdResponse>("/task/" + data._id)
-      return res.data.success
+      return res.data
     } catch (err) {}
   }
 
