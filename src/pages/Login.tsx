@@ -17,14 +17,14 @@ export const Login = () => {
   const api = useAppApiClient()
   const { setToken, setUser } = useContext(AuthenticationContext)
   const [formValid, setFormValid] = useState(false)
-  const login = useAsync<LoginResponse | undefined | null, LoginRequest>(api.login)
-  const handleLogin = async (email: string, password: string) => {
-    const result = await login.run({ email: email, password: password })
-    if (!result) return
-    setToken(result.token)
-    setUser(result.user)
+  const login = useAsync<void | undefined | null, LoginRequest>(async (loginRequest: LoginRequest) => {
+    const response = await api.login(loginRequest)
+    if (!response) return
+    setToken(response.token)
+    setUser(response.user)
     history.replace("/")
-  }
+  })
+
   const {
     value: email,
     isValueValid: emailiIsValid,
@@ -54,14 +54,18 @@ export const Login = () => {
     if (!(passwordInputValid && emailiIsValid)) {
       return
     }
-    handleLogin(email, password)
+    login.run({ email: email, password: password })
     resetInputEmail()
     resetInputpassword()
   }
   return (
     <Fragment>
       {!(login.error === null) ? (
-        <Typography variant="h1">Erorr</Typography>
+        login.loading ? (
+          <Typography variant="h1">Loading</Typography>
+        ) : (
+          <Typography variant="h1">Erorr</Typography>
+        )
       ) : (
         <EmptyLayout>
           <Dialog open>
