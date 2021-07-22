@@ -36,9 +36,7 @@ const register =
     try {
       const res = await api.post<LoginResponse>("/user/register", data)
       return res.data
-    } catch (err) {
-      return null
-    }
+    } catch (err) {}
   }
 
 export type LoginRequest = {
@@ -52,9 +50,7 @@ const login =
     try {
       const res = await api.post<LoginResponse>("/user/login", data)
       return res.data
-    } catch (err) {
-      return null
-    }
+    } catch (err) {}
   }
 
 type LogoutResponse = {
@@ -65,18 +61,14 @@ const logout = (api: AxiosInstance) => async (): Promise<boolean | undefined | n
   try {
     const res = await api.post<LogoutResponse>("/user/logout")
     return res.data.success
-  } catch (err) {
-    return null
-  }
+  } catch (err) {}
 }
 
 const getCurrentUser = (api: AxiosInstance) => async (): Promise<User | undefined | null> => {
   try {
     const res = await api.get<User>("/user/me")
     return res.data
-  } catch (err) {
-    return null
-  }
+  } catch (err) {}
 }
 
 export type UpdateCurrentUserRequest = {
@@ -95,9 +87,7 @@ const updateCurrentUser =
     try {
       const res = await api.put<UpdateCurrentUserResponse>("/user/me", data)
       return res.data
-    } catch (err) {
-      return null
-    }
+    } catch (err) {}
   }
 
 export type AddTaskRequest = {
