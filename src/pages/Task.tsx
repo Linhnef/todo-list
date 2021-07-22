@@ -12,13 +12,12 @@ const TaskTodo = () => {
   const api = useAppApiClient()
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [addTaskDescription, setAddTaskDescription] = useState<string>("")
-  const addTask = useAsync<boolean | undefined | null, AddTaskRequest>(api.addTask)
-  const addTaskHandle = async () => {
-    const result = await addTask.run({ description: addTaskDescription })
+  const addTask = useAsync<void | undefined | null, AddTaskRequest>(async (addTaskRequest: AddTaskRequest) => {
+    const result = await api.addTask(addTaskRequest)
     if (!result) return
     setAddTaskDescription("")
     setIsAddOpen(false)
-  }
+  })
   return (
     <>
       <TaskTodoHeader color="default" position="static">
@@ -36,7 +35,7 @@ const TaskTodo = () => {
                 <Badge color="secondary">
                   <NoteAddIcon fontSize="large" />
                 </Badge>
-              </TaskTodoListIcon>
+              </TaskTodoListIcon>z
             </TaskTodoHeaderGrid>
           </Grid>
         </Toolbar>
@@ -50,7 +49,13 @@ const TaskTodo = () => {
             }}
             label="Description"
           />
-          <ButtonOutlined onClick={addTaskHandle}>Submit</ButtonOutlined>
+          <ButtonOutlined
+            onClick={() => {
+              addTask.run({ description: addTaskDescription })
+            }}
+          >
+            Submit
+          </ButtonOutlined>
           <ButtonOutlined
             onClick={() => {
               setIsAddOpen(false)
@@ -87,12 +92,6 @@ const TaskTodoHeaderBackground = styled(Grid)`
   padding-top: 0.5%;
   padding-left: 1%;
   float: left;
-`
-const IcoinButtonTable = styled(IconButton)`
-  float: right;
-  &:hover {
-    cursor: pointer;
-  }
 `
 
 const AddPaper = styled(Paper)`

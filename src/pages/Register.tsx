@@ -17,20 +17,13 @@ export const Register = () => {
   const api = useAppApiClient()
   const { setToken, setUser } = useContext(AuthenticationContext)
   const [formValid, setFormValid] = useState(false)
-  const register = useAsync<LoginResponse | undefined | null, RegisterRequest>(api.register)
-
-  const handleSignUp = async (username: string, email: string, password: string, age: number) => {
-    const result = await register.run({
-      name: username,
-      email: email,
-      password: password,
-      age: age,
-    })
-    if (!result) return
-    setToken(result.data.token)
-    setUser(result.data.user)
+  const register = useAsync<void | undefined | null, RegisterRequest>(async (registerRequest: RegisterRequest) => {
+    const response = await api.register(registerRequest)
+    if (!response) return
+    setToken(response.token)
+    setUser(response.user)
     history.replace("/")
-  }
+  })
 
   const {
     value: email,
@@ -67,7 +60,7 @@ export const Register = () => {
     reset: resetInputAge,
   } = useInput((value) => parseInt(value) > 0)
   const validFormHandler = () => {
-    if (!passwordInputHasError && !emailInputHasError && !ageInputHasError && !nameInputHasError) setFormValid(true)
+    setFormValid(!passwordInputHasError && !emailInputHasError && !ageInputHasError && !nameInputHasError)
   }
   const handleRegister = (event: any) => {
     event.preventDefault()
@@ -78,7 +71,7 @@ export const Register = () => {
     if (!(emailiIsValid && passwordInputValid && ageInputValid && nameiIsValid)) {
       return
     }
-    handleSignUp(name, email, password, parseInt(age))
+    register.run({ name, email, password, age: parseInt(age) })
     resetInputEmail()
     resetInputpassword()
     resetInputName()
@@ -88,7 +81,11 @@ export const Register = () => {
   return (
     <Fragment>
       {!(register.error === null) ? (
-        <Typography variant="h1">Erorr</Typography>
+        register.loading ? (
+          <Typography variant="h1">Loading</Typography>
+        ) : (
+          <Typography variant="h1">Erorr</Typography>
+        )
       ) : (
         <EmptyLayout>
           <Dialog open>

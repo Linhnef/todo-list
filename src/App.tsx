@@ -6,6 +6,7 @@ import { Login } from "./pages/Login"
 import { useContext } from "react"
 import { AuthenticationContext } from "./contexts/authenticationContext"
 import { UpdateUser } from "./pages/UpdateUser"
+import TaskTodo from "./pages/Task"
 
 function App() {
   const { token } = useContext(AuthenticationContext)
@@ -18,6 +19,7 @@ function App() {
       <Route path="/login">{!token && <Login />}</Route>
       <Route path="/register"> {!token && <Register />}</Route>
       <Route path="/updateUser">{token && <UpdateUser />}</Route>
+      <Route path="/task">{token && <TaskTodo />}</Route>
     </Switch>
   )
 }

@@ -18,16 +18,13 @@ export const UpdateUser = () => {
   const [age, setAge] = useState<number>()
   const [email, setEmail] = useState<string>()
 
-  const updateUser = useAsync<UpdateCurrentUserResponse | undefined | null, UpdateCurrentUserRequest>(
-    api.updateCurrentUser
-  )
-
-  const handleUpdate = async () => {
-    const { data } = await updateUser.run({ name: name, age, email })
-    if (!data) return
-    setUser(data)
+  const updateUser = useAsync<void, UpdateCurrentUserRequest>(async (updateUserRequest: UpdateCurrentUserRequest) => {
+    const response = await api.updateCurrentUser(updateUserRequest)
+    if (!response) return
+    setUser(response.data)
     history.replace("/")
-  }
+  })
+
   return (
     <React.Fragment>
       {updateUser.error === null && user ? (
@@ -58,13 +55,20 @@ export const UpdateUser = () => {
               defaultValue={user.email}
               value={email}
             />
-            <ButtonOutlined color="primary" onClick={handleUpdate}>
+            <ButtonOutlined
+              color="primary"
+              onClick={() => {
+                updateUser.run({ age, name, email })
+              }}
+            >
               Update
             </ButtonOutlined>
           </FormGrid>
         </FormControl>
+      ) : updateUser.loading ? (
+        <Typography variant="h2">Loading</Typography>
       ) : (
-        <Typography>Error</Typography>
+        <Typography variant="h2">Error</Typography>
       )}
     </React.Fragment>
   )
