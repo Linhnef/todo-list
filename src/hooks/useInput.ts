@@ -21,7 +21,3 @@ export const useInput = (validateConditionFuntion: (arg: string) => boolean) => 
   }
   return { value, isValueValid, hasError, valueChangeHanlder, inputBlurHandler, reset }
 }
-
-export const propsChange = <T>(value: T, setValue: (value: T) => void) => {
-  setValue(value)
-}
