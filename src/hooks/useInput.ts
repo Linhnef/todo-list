@@ -19,7 +19,7 @@ export const useInput = (validateConditionFuntion: (arg: string) => boolean) => 
     setValue("")
     setIsTouched(false)
   }
-  return { value: value, isValueValid: isValueValid, hasError: hasError, valueChangeHanlder, inputBlurHandler, reset }
+  return { value, isValueValid, hasError, valueChangeHanlder, inputBlurHandler, reset }
 }
 
 export const propsChange = <T>(value: T, setValue: (value: T) => void) => {
