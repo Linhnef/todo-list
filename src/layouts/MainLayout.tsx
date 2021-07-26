@@ -1,10 +1,17 @@
 import styled from "styled-components"
+import { Header } from "../components/Header"
+import * as React from "react"
 
-// Layout for private pages
-export const MainLayout = () => {
-  // Render:
-  // Navbar, sidebars, ...
-  return <Layout></Layout>
+interface MainLayoutProps {
+  children: React.ReactNode
+}
+export const MainLayout = (props: MainLayoutProps) => {
+  return (
+    <Layout>
+      <Header></Header>
+      <main>{props.children}</main>
+    </Layout>
+  )
 }
 
 const Layout = styled.div``
