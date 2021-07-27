@@ -9,7 +9,6 @@ export const createAppApiClient = (api: AxiosInstance) => {
     logout: logout(api),
     getCurrentUser: getCurrentUser(api),
     updateCurrentUser: updateCurrentUser(api),
-    addTask: addTask(api),
   }
 }
 
@@ -82,23 +81,5 @@ const updateCurrentUser =
     try {
       const res = await api.put<UpdateCurrentUserResponse>("/user/me", data)
       return res.data
-    } catch (err) {}
-  }
-
-export type AddTaskRequest = {
-  description: string
-}
-
-export type AddTaskResponse = {
-  success: boolean
-  data: Task
-}
-
-const addTask =
-  (api: AxiosInstance) =>
-  async (data: AddTaskRequest): Promise<boolean | undefined | null> => {
-    try {
-      const res = await api.post<AddTaskResponse>("/task", data)
-      return res.data.success
     } catch (err) {}
   }
