@@ -1,11 +1,11 @@
 import { Grid, Typography } from "@material-ui/core"
 import * as React from "react"
 import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
-import { useContext, useState } from "react"
+import { useContext, useState, ChangeEvent } from "react"
 import { AuthenticationContext } from "../contexts/authenticationContext"
 import { useHistory } from "react-router"
 import styled from "styled-components"
-import { UpdateCurrentUserRequest, UpdateCurrentUserResponse } from "../services/api/createAppApiClient"
+import { UpdateCurrentUserRequest } from "../services/api/createAppApiClient"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
 import { InputOutlined } from "../components/inputs/InputOutlined"
@@ -18,7 +18,7 @@ export const UpdateUser = () => {
   const [age, setAge] = useState<number>()
   const [email, setEmail] = useState<string>()
 
-  const updateUser = useAsync<void, UpdateCurrentUserRequest>(async (updateUserRequest: UpdateCurrentUserRequest) => {
+  const updateUser = useAsync(async (updateUserRequest: UpdateCurrentUserRequest) => {
     const response = await api.updateCurrentUser(updateUserRequest)
     if (!response) return
     setUser(response.data)
@@ -36,14 +36,14 @@ export const UpdateUser = () => {
           <FormGrid item xs={2}>
             <InputOutlined
               label="Name"
-              onChange={(event: any) => setName(event.target.value)}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => setName(event.target.value)}
               defaultValue={user.name}
               value={name}
             />
 
             <InputOutlined
               label="Age"
-              onChange={(event: any) => setAge(event.target.value)}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => setAge(parseInt(event.target.value))}
               defaultValue={user.age}
               value={age}
               type="number"
@@ -51,16 +51,11 @@ export const UpdateUser = () => {
 
             <InputOutlined
               label="label"
-              onChange={(event: any) => setEmail(event.target.value)}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
               defaultValue={user.email}
               value={email}
             />
-            <ButtonOutlined
-              color="primary"
-              onClick={() => {
-                updateUser.run({ age, name, email })
-              }}
-            >
+            <ButtonOutlined color="primary" onClick={() => updateUser.run({ age, name, email })}>
               Update
             </ButtonOutlined>
           </FormGrid>

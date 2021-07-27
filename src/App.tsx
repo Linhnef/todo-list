@@ -6,20 +6,36 @@ import { Login } from "./pages/Login"
 import { useContext } from "react"
 import { AuthenticationContext } from "./contexts/authenticationContext"
 import { UpdateUser } from "./pages/UpdateUser"
-import TaskTodo from "./pages/Task"
+import Tasks from "./pages/Task"
 
 function App() {
   const { token } = useContext(AuthenticationContext)
 
   return (
     <Switch>
-      <Route exact path="/">
-        {token && <Home />}
-      </Route>
-      <Route path="/login">{!token && <Login />}</Route>
-      <Route path="/register"> {!token && <Register />}</Route>
-      <Route path="/updateUser">{token && <UpdateUser />}</Route>
-      <Route path="/task">{token && <TaskTodo />}</Route>
+      {!token && (
+        <>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/register">
+            <Register />
+          </Route>
+        </>
+      )}
+      {token && (
+        <>
+          <Route path="/updateUser">
+            <UpdateUser />
+          </Route>
+          <Route path="/task">
+            <Tasks />
+          </Route>
+          <Route exact path="/">
+            <Home />
+          </Route>
+        </>
+      )}
     </Switch>
   )
 }

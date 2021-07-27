@@ -1,57 +1,55 @@
-import { AppBar, Grid, Toolbar, Badge, Typography, IconButton, Dialog, Paper } from "@material-ui/core"
+import { AppBar, Grid, Toolbar, Badge, Checkbox, Typography, IconButton, Dialog, Paper } from "@material-ui/core"
 import styled from "styled-components"
 import NoteAddIcon from "@material-ui/icons/NoteAdd"
 import { InputOutlined } from "../components/inputs/InputOutlined"
 import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
-import { useState } from "react"
+import { useState, ChangeEvent } from "react"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
 import { AddTaskRequest } from "../services/api/createAppApiClient"
 
-const TaskTodo = () => {
+const Tasks = () => {
   const api = useAppApiClient()
   const [isAddOpen, setIsAddOpen] = useState(false)
-  const [addTaskDescription, setAddTaskDescription] = useState<string>("")
-  const addTask = useAsync<void | undefined | null, AddTaskRequest>(async (addTaskRequest: AddTaskRequest) => {
+  const [description, setDescription] = useState<string>("")
+  const [checked, setChecked] = useState(false)
+  const addTask = useAsync(async (addTaskRequest: AddTaskRequest) => {
     const result = await api.addTask(addTaskRequest)
     if (!result) return
-    setAddTaskDescription("")
+    setDescription("")
     setIsAddOpen(false)
   })
   return (
     <>
-      <TaskTodoHeader color="default" position="static">
+      <TasksHeader color="default" position="static">
         <Toolbar>
           <Grid container>
-            <TaskTodoHeaderGrid item sm={12}>
-              <TaskTodoHeaderBackground item>
+            <TasksHeaderGrid item sm={12}>
+              <TasksHeaderBackground item>
                 <Typography variant="h3">TODO LIST</Typography>
-              </TaskTodoHeaderBackground>
-              <TaskTodoListIcon
-                onClick={() => {
-                  setIsAddOpen(true)
-                }}
-              >
+              </TasksHeaderBackground>
+              <TasksAddIcon onClick={() => setIsAddOpen(true)}>
                 <Badge color="secondary">
                   <NoteAddIcon fontSize="large" />
                 </Badge>
-              </TaskTodoListIcon>
-            </TaskTodoHeaderGrid>
+              </TasksAddIcon>
+            </TasksHeaderGrid>
           </Grid>
         </Toolbar>
-      </TaskTodoHeader>
+      </TasksHeader>
       <Dialog open={isAddOpen}>
         <AddPaper>
           <AddInput
-            value={addTaskDescription}
-            onChange={(event: any) => {
-              setAddTaskDescription(event.target.value)
+            value={description}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              setDescription(event.target.value)
             }}
             label="Description"
           />
+          <Checkbox color="default" onClick={() => setChecked(!checked)} checked={checked} />
           <ButtonOutlined
             onClick={() => {
-              addTask.run({ description: addTaskDescription })
+              addTask.run({ description: description, completed: checked })
             }}
           >
             Submit
@@ -61,7 +59,7 @@ const TaskTodo = () => {
               setIsAddOpen(false)
             }}
           >
-            Cancle
+            Cancel
           </ButtonOutlined>
         </AddPaper>
       </Dialog>
@@ -69,17 +67,17 @@ const TaskTodo = () => {
   )
 }
 
-const TaskTodoHeader = styled(AppBar)`
+const TasksHeader = styled(AppBar)`
   width: 100%;
   background-color: white;
   margin-bottom: 5%;
 `
 
-const TaskTodoHeaderGrid = styled(Grid)`
+const TasksHeaderGrid = styled(Grid)`
   border: 1px solid;
 `
 
-const TaskTodoListIcon = styled(IconButton)`
+const TasksAddIcon = styled(IconButton)`
   float: right;
   display: block;
   &:hover {
@@ -87,7 +85,7 @@ const TaskTodoListIcon = styled(IconButton)`
   }
 `
 
-const TaskTodoHeaderBackground = styled(Grid)`
+const TasksHeaderBackground = styled(Grid)`
   display: block;
   padding-top: 0.5%;
   padding-left: 1%;
@@ -99,7 +97,7 @@ const AddPaper = styled(Paper)`
 `
 
 const AddInput = styled(InputOutlined)`
-  width: 90%;
+  width: 80%;
 `
 
-export default TaskTodo
+export default Tasks

@@ -87,6 +87,7 @@ const updateCurrentUser =
 
 export type AddTaskRequest = {
   description: string
+  completed?: boolean
 }
 
 export type AddTaskResponse = {

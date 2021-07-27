@@ -8,7 +8,7 @@ import styled from "styled-components"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
 import { Fragment } from "react"
-import { LoginResponse, RegisterRequest } from "../services/api/createAppApiClient"
+import { RegisterRequest } from "../services/api/createAppApiClient"
 import { InputOutlined } from "../components/inputs/InputOutlined"
 import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 
@@ -17,7 +17,7 @@ export const Register = () => {
   const api = useAppApiClient()
   const { setToken, setUser } = useContext(AuthenticationContext)
   const [formValid, setFormValid] = useState(false)
-  const register = useAsync<void | undefined | null, RegisterRequest>(async (registerRequest: RegisterRequest) => {
+  const register = useAsync(async (registerRequest: RegisterRequest) => {
     const response = await api.register(registerRequest)
     if (!response) return
     setToken(response.token)
@@ -60,7 +60,7 @@ export const Register = () => {
     reset: resetInputAge,
   } = useInput((value) => parseInt(value) > 0)
   const validFormHandler = () => {
-    setFormValid(!passwordInputHasError && !emailInputHasError && !ageInputHasError && !nameInputHasError)
+    setFormValid(!formValid)
   }
   const handleRegister = (event: any) => {
     event.preventDefault()
@@ -68,7 +68,7 @@ export const Register = () => {
     handlePasswordlBlur(true)
     handleEmailBlur(true)
     handleAgelBlur(true)
-    if (!(emailiIsValid && passwordInputValid && ageInputValid && nameiIsValid)) {
+    if (!formValid) {
       return
     }
     register.run({ name, email, password, age: parseInt(age) })
