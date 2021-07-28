@@ -5,12 +5,15 @@ import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 import { BrowserRouter } from "react-router-dom"
 import { AuthenticationContextProvider } from "./contexts/authenticationContext"
+import { TaskContextProvider } from "./contexts/taskContext"
 
 ReactDOM.render(
   <AuthenticationContextProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <TaskContextProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </TaskContextProvider>
   </AuthenticationContextProvider>,
   document.getElementById("root")
 )
