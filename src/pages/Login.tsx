@@ -17,7 +17,7 @@ export const Login = () => {
   const api = useAppApiClient()
   const { setToken, setUser } = useContext(AuthenticationContext)
   const [formValid, setFormValid] = useState(false)
-  const login = useAsync<void | undefined | null, LoginRequest>(async (loginRequest: LoginRequest) => {
+  const login = useAsync(async (loginRequest: LoginRequest) => {
     const response = await api.login(loginRequest)
     if (!response) return
     setToken(response.token)
@@ -35,7 +35,7 @@ export const Login = () => {
   } = useInput((value) => value.trim().includes("@"))
 
   const validFormHandler = () => {
-    setFormValid(!passwordInputHasError && !emailInputHasError)
+    setFormValid(!formValid)
   }
 
   const {
@@ -51,7 +51,7 @@ export const Login = () => {
     event.preventDefault()
     handleEmailBlur(true)
     handlePasswordlBlur(true)
-    if (!(passwordInputValid && emailiIsValid)) {
+    if (!formValid) {
       return
     }
     login.run({ email: email, password: password })

@@ -5,7 +5,7 @@ import { AuthenticationContext } from "../contexts/authenticationContext"
 import { useContext, useState } from "react"
 import { NavLink } from "react-router-dom"
 import styled from "styled-components"
-import { LogoutButton } from "./LogoutButton"
+import { LogoutButton } from "../components/buttons/LogoutButton"
 
 export const Home = () => {
   const { user } = useContext(AuthenticationContext)
