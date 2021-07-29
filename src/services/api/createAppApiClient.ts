@@ -10,7 +10,7 @@ export const createAppApiClient = (api: AxiosInstance) => {
     getCurrentUser: getCurrentUser(api),
     updateCurrentUser: updateCurrentUser(api),
     addTask: addTask(api),
-    getTask: getTask(api),
+    getTasks: getTasks(api),
   }
 }
 
@@ -116,16 +116,12 @@ export type GetTaskRequest = {
   skip?: number
 }
 
-const getTask =
+const getTasks =
   (api: AxiosInstance) =>
   async (data: GetTaskRequest): Promise<GetTaskResponse | undefined | null> => {
     try {
       const res = await api.get<GetTaskResponse>("/task", {
-        params: {
-          completed: data.completed,
-          limit: data.limit,
-          skip: data.skip,
-        },
+        params: data,
       })
       return res.data
     } catch (err) {}

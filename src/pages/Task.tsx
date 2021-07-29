@@ -29,6 +29,9 @@ import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
 import { AddTaskRequest, GetTaskRequest } from "../services/api/createAppApiClient"
 import { TaskContext } from "../contexts/taskContext"
+import { TaskContextProvider } from "../contexts/taskContext"
+import { Heading2 } from "../components/Text/Heading2"
+import { Heading5 } from "../components/Text/Heading5"
 
 const Tasks = () => {
   const api = useAppApiClient()
@@ -43,29 +46,29 @@ const Tasks = () => {
     setIsAddOpen(false)
   })
   const getTask = useAsync(async (getTaskRequest: GetTaskRequest) => {
-    const response = await api.getTask(getTaskRequest)
+    const response = await api.getTasks(getTaskRequest)
     if (!response) return
     setTasks(response.data)
   })
   return (
-    <>
+    <TaskContextProvider>
       <TasksHeader color="default" position="static">
         <Toolbar>
           <Grid container>
             <TasksHeaderGrid item sm={12}>
               <TasksHeaderBackground item>
-                <Typography variant="h3">TODO LIST</Typography>
+                <Heading2>TODO LIST</Heading2>
               </TasksHeaderBackground>
-              <TasksIcon onClick={() => setIsAddOpen(true)}>
+              <AddButton onClick={() => setIsAddOpen(true)}>
                 <Badge color="secondary">
                   <NoteAddIcon fontSize="large" />
                 </Badge>
-              </TasksIcon>
-              <TasksIcon onClick={() => getTask.run({})}>
+              </AddButton>
+              <AddButton onClick={() => getTask.run({})}>
                 <Badge color="secondary">
                   <AllInboxIcon fontSize="large" />
                 </Badge>
-              </TasksIcon>
+              </AddButton>
             </TasksHeaderGrid>
           </Grid>
         </Toolbar>
@@ -77,30 +80,30 @@ const Tasks = () => {
             tasks.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>
-                  <Typography variant="h5">{item.description}</Typography>
+                  <Heading5>{item.description}</Heading5>
                 </TableCell>
                 <TableCell>
                   {item.completed ? <CheckCircleOutlineIcon fontSize="large" /> : <CancelIcon fontSize="large" />}
                 </TableCell>
                 <TableCell>
-                  <IcoinButtonTable>
+                  <IconButtonTable>
                     <ArrowForwardIosIcon fontSize="large" />
-                  </IcoinButtonTable>
-                  <IcoinButtonTable>
+                  </IconButtonTable>
+                  <IconButtonTable>
                     <UpdateIcon fontSize="large" />
-                  </IcoinButtonTable>
-                  <IcoinButtonTable>
+                  </IconButtonTable>
+                  <IconButtonTable>
                     <DeleteOutlineIcon fontSize="large" />
-                  </IcoinButtonTable>
+                  </IconButtonTable>
                 </TableCell>
               </TableRow>
             ))
           ) : getTask.loading ? (
-            <Typography variant="h2">Loading</Typography>
+            <Heading2>Loading</Heading2>
           ) : getTask.error ? (
-            <Typography variant="h2">Error</Typography>
+            <Heading2>Error</Heading2>
           ) : (
-            <Typography variant="h2">Empty</Typography>
+            <Heading2>Empty</Heading2>
           )}
           <TableRow>
             <TableCell>
@@ -141,7 +144,7 @@ const Tasks = () => {
           </ButtonOutlined>
         </AddPaper>
       </Dialog>
-    </>
+    </TaskContextProvider>
   )
 }
 
@@ -155,7 +158,7 @@ const TasksHeaderGrid = styled(Grid)`
   border: 1px solid;
 `
 
-const TasksIcon = styled(IconButton)`
+const AddButton = styled(IconButton)`
   float: right;
   display: block;
   &:hover {
@@ -177,7 +180,7 @@ const AddPaper = styled(Paper)`
 const AddInput = styled(InputOutlined)`
   width: 80%;
 `
-const IcoinButtonTable = styled(IconButton)`
+const IconButtonTable = styled(IconButton)`
   float: right;
   &:hover {
     cursor: pointer;
