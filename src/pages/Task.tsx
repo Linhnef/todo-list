@@ -59,16 +59,34 @@ const Tasks = () => {
               <TasksHeaderBackground item>
                 <Heading2>TODO LIST</Heading2>
               </TasksHeaderBackground>
-              <AddButton onClick={() => setIsAddOpen(true)}>
+              <TaskButton
+                onClick={() => {
+                  getTask.run({completed : false})
+                }}
+              >
+                <Badge color="secondary">
+                  <CheckCircleOutlineIcon fontSize="large" />
+                </Badge>
+              </TaskButton>
+              <TaskButton
+                onClick={() => {
+                  getTask.run({completed : true})
+                }}
+              >
+                <Badge color="secondary">
+                  <CancelIcon fontSize="large" />
+                </Badge>
+              </TaskButton>
+              <TaskButton onClick={() => setIsAddOpen(true)}>
                 <Badge color="secondary">
                   <NoteAddIcon fontSize="large" />
                 </Badge>
-              </AddButton>
-              <AddButton onClick={() => getTask.run({})}>
+              </TaskButton>
+              <TaskButton onClick={() => getTask.run({})}>
                 <Badge color="secondary">
                   <AllInboxIcon fontSize="large" />
                 </Badge>
-              </AddButton>
+              </TaskButton>
             </TasksHeaderGrid>
           </Grid>
         </Toolbar>
@@ -158,7 +176,7 @@ const TasksHeaderGrid = styled(Grid)`
   border: 1px solid;
 `
 
-const AddButton = styled(IconButton)`
+const TaskButton = styled(IconButton)`
   float: right;
   display: block;
   &:hover {
