@@ -8,9 +8,9 @@ import { AuthenticationContextProvider } from "./contexts/authenticationContext"
 
 ReactDOM.render(
   <AuthenticationContextProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </AuthenticationContextProvider>,
   document.getElementById("root")
 )

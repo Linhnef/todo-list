@@ -6,7 +6,7 @@ import { Login } from "./pages/Login"
 import { useContext } from "react"
 import { AuthenticationContext } from "./contexts/authenticationContext"
 import { UpdateUser } from "./pages/UpdateUser"
-import Tasks from "./pages/Task"
+import Tasks from "./pages/Tasks"
 
 function App() {
   const { token } = useContext(AuthenticationContext)
