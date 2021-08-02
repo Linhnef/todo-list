@@ -61,7 +61,7 @@ const Tasks = () => {
               </TasksHeaderBackground>
               <TaskButton
                 onClick={() => {
-                  getTask.run({completed : false})
+                  getTask.run({ completed: false })
                 }}
               >
                 <Badge color="secondary">
@@ -70,7 +70,7 @@ const Tasks = () => {
               </TaskButton>
               <TaskButton
                 onClick={() => {
-                  getTask.run({completed : true})
+                  getTask.run({ completed: true })
                 }}
               >
                 <Badge color="secondary">
