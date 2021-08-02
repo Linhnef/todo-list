@@ -9,6 +9,7 @@ export const createAppApiClient = (api: AxiosInstance) => {
     getCurrentUser: getCurrentUser(api),
     updateCurrentUser: updateCurrentUser(api),
     addTask: addTask(api),
+    getTasks: getTasks(api),
   }
 }
 
@@ -100,5 +101,27 @@ const addTask =
     try {
       const res = await api.post<AddTaskResponse>("/task", data)
       return res.data.success
+    } catch (err) {}
+  }
+
+export type GetTaskResponse = {
+  count: number
+  data: Task[]
+}
+
+export type GetTaskRequest = {
+  completed?: boolean
+  limit?: number
+  skip?: number
+}
+
+const getTasks =
+  (api: AxiosInstance) =>
+  async (data: GetTaskRequest): Promise<GetTaskResponse | undefined | null> => {
+    try {
+      const res = await api.get<GetTaskResponse>("/task", {
+        params: data,
+      })
+      return res.data
     } catch (err) {}
   }
