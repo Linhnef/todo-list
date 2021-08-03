@@ -22,6 +22,7 @@ import UpdateIcon from "@material-ui/icons/Update"
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline"
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos"
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
+import FirstPageIcon from "@material-ui/icons/FirstPage"
 import { InputOutlined } from "../components/inputs/InputOutlined"
 import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 import { useState, ChangeEvent, useContext } from "react"
@@ -32,6 +33,7 @@ import { TaskContext } from "../contexts/taskContext"
 import { TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
 import { Heading5 } from "../components/Text/Heading5"
+const LIMIT_TASK_PER_PAGE = 3
 
 const Tasks = () => {
   const api = useAppApiClient()
@@ -39,6 +41,7 @@ const Tasks = () => {
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [description, setDescription] = useState<string>("")
   const [checked, setChecked] = useState(false)
+  const [page, setPage] = useState(0)
   const addTask = useAsync(async (addTaskRequest: AddTaskRequest) => {
     const result = await api.addTask(addTaskRequest)
     if (!result) return
@@ -50,6 +53,7 @@ const Tasks = () => {
     if (!response) return
     setTasks(response.data)
   })
+
   return (
     <TaskContextProvider>
       <TasksHeader color="default" position="static">
@@ -85,6 +89,18 @@ const Tasks = () => {
               <TaskButton onClick={() => getTask.run({})}>
                 <Badge color="secondary">
                   <AllInboxIcon fontSize="large" />
+                </Badge>
+              </TaskButton>
+              <TaskButton
+                onClick={() =>
+                  getTask.run({
+                    limit: LIMIT_TASK_PER_PAGE,
+                    skip: 0,
+                  })
+                }
+              >
+                <Badge color="secondary">
+                  <FirstPageIcon fontSize="large" />
                 </Badge>
               </TaskButton>
             </TasksHeaderGrid>
@@ -126,10 +142,28 @@ const Tasks = () => {
           <TableRow>
             <TableCell>
               <IconButton>
-                <ArrowBackIosIcon fontSize="large" />
+                <ArrowBackIosIcon
+                  onClick={() => {
+                    getTask.run({
+                      limit: LIMIT_TASK_PER_PAGE,
+                      skip: (page - 1) * LIMIT_TASK_PER_PAGE,
+                    })
+                    setPage(page - 1)
+                  }}
+                  fontSize="large"
+                />
               </IconButton>
               <IconButton>
-                <ArrowForwardIosIcon fontSize="large" />
+                <ArrowForwardIosIcon
+                  onClick={() => {
+                    getTask.run({
+                      limit: LIMIT_TASK_PER_PAGE,
+                      skip: (page + 1) * LIMIT_TASK_PER_PAGE,
+                    })
+                    setPage(page + 1)
+                  }}
+                  fontSize="large"
+                />
               </IconButton>
             </TableCell>
           </TableRow>
