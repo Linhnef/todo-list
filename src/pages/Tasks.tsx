@@ -22,7 +22,9 @@ import UpdateIcon from "@material-ui/icons/Update"
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline"
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos"
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
+
 import FirstPageIcon from "@material-ui/icons/FirstPage"
+
 import { InputOutlined } from "../components/inputs/InputOutlined"
 import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 import { useState, ChangeEvent, useContext } from "react"
@@ -34,6 +36,7 @@ import { TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
 import { Heading5 } from "../components/Text/Heading5"
 const LIMIT_TASK_PER_PAGE = 3
+
 
 const Tasks = () => {
   const api = useAppApiClient()
@@ -53,7 +56,6 @@ const Tasks = () => {
     if (!response) return
     setTasks(response.data)
   })
-
   return (
     <TaskContextProvider>
       <TasksHeader color="default" position="static">
@@ -209,7 +211,6 @@ const TasksHeader = styled(AppBar)`
 const TasksHeaderGrid = styled(Grid)`
   border: 1px solid;
 `
-
 const TaskButton = styled(IconButton)`
   float: right;
   display: block;

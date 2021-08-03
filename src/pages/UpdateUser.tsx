@@ -5,7 +5,7 @@ import { useContext, useState, ChangeEvent } from "react"
 import { AuthenticationContext } from "../contexts/authenticationContext"
 import { useHistory } from "react-router"
 import styled from "styled-components"
-import { UpdateCurrentUserRequest } from "../services/api/createAppApiClient"
+import { UpdateCurrentUserRequest, UpdateCurrentUserResponse } from "../services/api/createAppApiClient"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
 import { InputOutlined } from "../components/inputs/InputOutlined"
@@ -17,6 +17,7 @@ export const UpdateUser = () => {
   const [name, setName] = useState<string>()
   const [age, setAge] = useState<number>()
   const [email, setEmail] = useState<string>()
+
 
   const updateUser = useAsync(async (updateUserRequest: UpdateCurrentUserRequest) => {
     const response = await api.updateCurrentUser(updateUserRequest)
@@ -56,6 +57,7 @@ export const UpdateUser = () => {
               value={email}
             />
             <ButtonOutlined color="primary" onClick={() => updateUser.run({ age, name, email })}>
+
               Update
             </ButtonOutlined>
           </FormGrid>
