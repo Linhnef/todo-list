@@ -1,5 +1,6 @@
 import { AxiosInstance } from "axios"
 import { User } from "./types/User"
+import { Task } from "./types/Task"
 
 export const createAppApiClient = (api: AxiosInstance) => {
   return {
