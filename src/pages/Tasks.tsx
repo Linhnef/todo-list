@@ -28,7 +28,7 @@ import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 import { useState, ChangeEvent, useContext } from "react"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
-import { AddTaskRequest, GetTaskRequest } from "../services/api/createAppApiClient"
+import { AddTaskRequest, DeleteTaskByIdRequest, GetTaskRequest } from "../services/api/createAppApiClient"
 import { TaskContext } from "../contexts/taskContext"
 import { TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
@@ -52,6 +52,11 @@ const Tasks = () => {
     const response = await api.getTasks(getTaskRequest)
     if (!response) return
     setTasks(response.data)
+  })
+  const deleteTask = useAsync(async (deleteTaskByIdRequest: DeleteTaskByIdRequest) => {
+    const response = await api.DeleteTaskById(deleteTaskByIdRequest)
+    if (!response?.success) return
+    getTask.run({})
   })
 
   return (
@@ -127,7 +132,7 @@ const Tasks = () => {
                     <UpdateIcon fontSize="large" />
                   </IconButtonTable>
                   <IconButtonTable>
-                    <DeleteOutlineIcon fontSize="large" />
+                    <DeleteOutlineIcon onClick={() => deleteTask.run({ _id: item._id })} fontSize="large" />
                   </IconButtonTable>
                 </TableCell>
               </TableRow>
