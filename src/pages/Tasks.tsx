@@ -66,7 +66,7 @@ const Tasks = () => {
     })
   }
 
-  const prevPage = () => {
+  const getPrevPage = () => {
     getTask.run({
       limit: LIMIT_TASK_PER_PAGE,
       skip: (page - 1) * LIMIT_TASK_PER_PAGE,
@@ -74,7 +74,7 @@ const Tasks = () => {
     setPage(page - 1)
   }
 
-  const nextPage = () => {
+  const getNextPage = () => {
     getTask.run({
       limit: LIMIT_TASK_PER_PAGE,
       skip: (page + 1) * LIMIT_TASK_PER_PAGE,
@@ -163,10 +163,10 @@ const Tasks = () => {
           <TableRow>
             <TableCell>
               <IconButton>
-                <ArrowBackIosIcon onClick={() => prevPage()} fontSize="large" />
+                <ArrowBackIosIcon onClick={() => getPrevPage()} fontSize="large" />
               </IconButton>
               <IconButton>
-                <ArrowForwardIosIcon onClick={() => nextPage()} fontSize="large" />
+                <ArrowForwardIosIcon onClick={() => getNextPage()} fontSize="large" />
               </IconButton>
             </TableCell>
           </TableRow>
