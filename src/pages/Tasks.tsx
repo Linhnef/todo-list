@@ -59,7 +59,7 @@ const Tasks = () => {
     getTask.run({})
   })
 
-  const firstPage = () => {
+  const getFirstPage = () => {
     getTask.run({
       limit: LIMIT_TASK_PER_PAGE,
       skip: 0,
@@ -119,7 +119,7 @@ const Tasks = () => {
                   <AllInboxIcon fontSize="large" />
                 </Badge>
               </TaskButton>
-              <TaskButton onClick={() => firstPage()}>
+              <TaskButton onClick={() => getFirstPage()}>
                 <Badge color="secondary">
                   <FirstPageIcon fontSize="large" />
                 </Badge>
