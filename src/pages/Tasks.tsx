@@ -22,9 +22,7 @@ import UpdateIcon from "@material-ui/icons/Update"
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline"
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos"
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
-
 import FirstPageIcon from "@material-ui/icons/FirstPage"
-
 import { InputOutlined } from "../components/inputs/InputOutlined"
 import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 import { useState, ChangeEvent, useContext } from "react"
@@ -36,7 +34,6 @@ import { TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
 import { Heading5 } from "../components/Text/Heading5"
 const LIMIT_TASK_PER_PAGE = 3
-
 
 const Tasks = () => {
   const api = useAppApiClient()
@@ -56,6 +53,30 @@ const Tasks = () => {
     if (!response) return
     setTasks(response.data)
   })
+
+  const firstPage = () => {
+    getTask.run({
+      limit: LIMIT_TASK_PER_PAGE,
+      skip: 0,
+    })
+  }
+
+  const prevPage = () => {
+    getTask.run({
+      limit: LIMIT_TASK_PER_PAGE,
+      skip: (page - 1) * LIMIT_TASK_PER_PAGE,
+    })
+    setPage(page - 1)
+  }
+
+  const nextPage = () => {
+    getTask.run({
+      limit: LIMIT_TASK_PER_PAGE,
+      skip: (page + 1) * LIMIT_TASK_PER_PAGE,
+    })
+    setPage(page + 1)
+  }
+
   return (
     <TaskContextProvider>
       <TasksHeader color="default" position="static">
@@ -93,14 +114,7 @@ const Tasks = () => {
                   <AllInboxIcon fontSize="large" />
                 </Badge>
               </TaskButton>
-              <TaskButton
-                onClick={() =>
-                  getTask.run({
-                    limit: LIMIT_TASK_PER_PAGE,
-                    skip: 0,
-                  })
-                }
-              >
+              <TaskButton onClick={() => firstPage()}>
                 <Badge color="secondary">
                   <FirstPageIcon fontSize="large" />
                 </Badge>
@@ -144,28 +158,10 @@ const Tasks = () => {
           <TableRow>
             <TableCell>
               <IconButton>
-                <ArrowBackIosIcon
-                  onClick={() => {
-                    getTask.run({
-                      limit: LIMIT_TASK_PER_PAGE,
-                      skip: (page - 1) * LIMIT_TASK_PER_PAGE,
-                    })
-                    setPage(page - 1)
-                  }}
-                  fontSize="large"
-                />
+                <ArrowBackIosIcon onClick={() => prevPage()} fontSize="large" />
               </IconButton>
               <IconButton>
-                <ArrowForwardIosIcon
-                  onClick={() => {
-                    getTask.run({
-                      limit: LIMIT_TASK_PER_PAGE,
-                      skip: (page + 1) * LIMIT_TASK_PER_PAGE,
-                    })
-                    setPage(page + 1)
-                  }}
-                  fontSize="large"
-                />
+                <ArrowForwardIosIcon onClick={() => nextPage()} fontSize="large" />
               </IconButton>
             </TableCell>
           </TableRow>
@@ -211,6 +207,7 @@ const TasksHeader = styled(AppBar)`
 const TasksHeaderGrid = styled(Grid)`
   border: 1px solid;
 `
+
 const TaskButton = styled(IconButton)`
   float: right;
   display: block;
