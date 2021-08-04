@@ -59,6 +59,29 @@ const Tasks = () => {
     getTask.run({})
   })
 
+  const firstPage = () => {
+    getTask.run({
+      limit: LIMIT_TASK_PER_PAGE,
+      skip: 0,
+    })
+  }
+
+  const prevPage = () => {
+    getTask.run({
+      limit: LIMIT_TASK_PER_PAGE,
+      skip: (page - 1) * LIMIT_TASK_PER_PAGE,
+    })
+    setPage(page - 1)
+  }
+
+  const nextPage = () => {
+    getTask.run({
+      limit: LIMIT_TASK_PER_PAGE,
+      skip: (page + 1) * LIMIT_TASK_PER_PAGE,
+    })
+    setPage(page + 1)
+  }
+
   return (
     <TaskContextProvider>
       <TasksHeader color="default" position="static">
@@ -96,14 +119,7 @@ const Tasks = () => {
                   <AllInboxIcon fontSize="large" />
                 </Badge>
               </TaskButton>
-              <TaskButton
-                onClick={() =>
-                  getTask.run({
-                    limit: LIMIT_TASK_PER_PAGE,
-                    skip: 0,
-                  })
-                }
-              >
+              <TaskButton onClick={() => firstPage()}>
                 <Badge color="secondary">
                   <FirstPageIcon fontSize="large" />
                 </Badge>
@@ -147,28 +163,10 @@ const Tasks = () => {
           <TableRow>
             <TableCell>
               <IconButton>
-                <ArrowBackIosIcon
-                  onClick={() => {
-                    getTask.run({
-                      limit: LIMIT_TASK_PER_PAGE,
-                      skip: (page - 1) * LIMIT_TASK_PER_PAGE,
-                    })
-                    setPage(page - 1)
-                  }}
-                  fontSize="large"
-                />
+                <ArrowBackIosIcon onClick={() => prevPage()} fontSize="large" />
               </IconButton>
               <IconButton>
-                <ArrowForwardIosIcon
-                  onClick={() => {
-                    getTask.run({
-                      limit: LIMIT_TASK_PER_PAGE,
-                      skip: (page + 1) * LIMIT_TASK_PER_PAGE,
-                    })
-                    setPage(page + 1)
-                  }}
-                  fontSize="large"
-                />
+                <ArrowForwardIosIcon onClick={() => nextPage()} fontSize="large" />
               </IconButton>
             </TableCell>
           </TableRow>
