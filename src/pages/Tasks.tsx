@@ -28,7 +28,12 @@ import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 import { useState, ChangeEvent, useContext } from "react"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
-import { AddTaskRequest, DeleteTaskByIdRequest, GetTaskRequest } from "../services/api/createAppApiClient"
+import {
+  AddTaskRequest,
+  DeleteTaskByIdRequest,
+  GetTaskByIdRequest,
+  GetTaskRequest,
+} from "../services/api/createAppApiClient"
 import { TaskContext } from "../contexts/taskContext"
 import { TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
@@ -37,7 +42,7 @@ const LIMIT_TASK_PER_PAGE = 3
 
 const Tasks = () => {
   const api = useAppApiClient()
-  const { tasks, setTasks } = useContext(TaskContext)
+  const { tasks, setTasks, setCurrentTask } = useContext(TaskContext)
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [description, setDescription] = useState<string>("")
   const [checked, setChecked] = useState(false)
@@ -57,6 +62,12 @@ const Tasks = () => {
     const response = await api.DeleteTaskById(deleteTaskByIdRequest)
     if (!response?.success) return
     getTask.run({})
+  })
+
+  const getTaskById = useAsync(async (getTaskByIdRequest: GetTaskByIdRequest) => {
+    const response = await api.getTaskById(getTaskByIdRequest)
+    if (!response) return
+    setCurrentTask(response.data)
   })
 
   const getFirstPage = () => {
@@ -80,6 +91,10 @@ const Tasks = () => {
       skip: (page + 1) * LIMIT_TASK_PER_PAGE,
     })
     setPage(page + 1)
+  }
+
+  const getTaskDetailHandle = (id: string) => {
+    getTaskById.run({ id: id })
   }
 
   return (
@@ -142,7 +157,7 @@ const Tasks = () => {
                 </TableCell>
                 <TableCell>
                   <IconButtonTable>
-                    <ArrowForwardIosIcon fontSize="large" />
+                    <ArrowForwardIosIcon onClick={() => getTaskDetailHandle(item._id)} fontSize="large" />
                   </IconButtonTable>
                   <IconButtonTable>
                     <UpdateIcon fontSize="large" />

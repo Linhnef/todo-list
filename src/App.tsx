@@ -7,6 +7,7 @@ import { useContext } from "react"
 import { AuthenticationContext } from "./contexts/authenticationContext"
 import { UpdateUser } from "./pages/UpdateUser"
 import Tasks from "./pages/Tasks"
+import TaskDetail from "./pages/TaskDetail"
 
 function App() {
   const { token } = useContext(AuthenticationContext)
@@ -27,6 +28,9 @@ function App() {
         <>
           <Route path="/updateUser">
             <UpdateUser />
+          </Route>
+          <Route path="/task/:id">
+            <TaskDetail />
           </Route>
           <Route path="/task">
             <Tasks />

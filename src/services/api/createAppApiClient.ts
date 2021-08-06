@@ -12,6 +12,7 @@ export const createAppApiClient = (api: AxiosInstance) => {
     addTask: addTask(api),
     getTasks: getTasks(api),
     DeleteTaskById: DeleteTaskById(api),
+    getTaskById: getTaskById(api),
   }
 }
 
@@ -142,6 +143,23 @@ const DeleteTaskById =
   async (data: DeleteTaskByIdRequest): Promise<DeleteTaskByIdResponse | undefined | null> => {
     try {
       const res = await api.delete<DeleteTaskByIdResponse>("/task/" + data._id)
+      return res.data
+    } catch (err) {}
+  }
+export type GetTaskByIdResponse = {
+  success: boolean
+  data: Task
+}
+
+export type GetTaskByIdRequest = {
+  id: string
+}
+
+const getTaskById =
+  (api: AxiosInstance) =>
+  async (data: GetTaskByIdRequest): Promise<GetTaskByIdResponse | undefined | null> => {
+    try {
+      const res = await api.get<GetTaskByIdResponse>("/task/" + data.id)
       return res.data
     } catch (err) {}
   }
