@@ -38,15 +38,17 @@ import { TaskContext } from "../contexts/taskContext"
 import { TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
 import { Heading5 } from "../components/Text/Heading5"
+import { useHistory } from "react-router"
 const LIMIT_TASK_PER_PAGE = 3
 
 const Tasks = () => {
+  const history = useHistory()
   const api = useAppApiClient()
   const { tasks, setTasks, setCurrentTask } = useContext(TaskContext)
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [description, setDescription] = useState<string>("")
   const [checked, setChecked] = useState(false)
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
   const addTask = useAsync(async (addTaskRequest: AddTaskRequest) => {
     const result = await api.addTask(addTaskRequest)
     if (!result) return
@@ -55,7 +57,9 @@ const Tasks = () => {
   })
   const getTask = useAsync(async (getTaskRequest: GetTaskRequest) => {
     const response = await api.getTasks(getTaskRequest)
-    if (!response) return
+    if (!response) {
+      return
+    }
     setTasks(response.data)
   })
   const deleteTask = useAsync(async (deleteTaskByIdRequest: DeleteTaskByIdRequest) => {
@@ -73,8 +77,9 @@ const Tasks = () => {
   const getFirstPage = () => {
     getTask.run({
       limit: LIMIT_TASK_PER_PAGE,
-      skip: 0,
+      skip: page - 1,
     })
+    history.push(`/task?page=${0}`)
   }
 
   const getPrevPage = () => {
@@ -83,14 +88,16 @@ const Tasks = () => {
       skip: (page - 1) * LIMIT_TASK_PER_PAGE,
     })
     setPage(page - 1)
+    history.push(`/task?page=${page}`)
   }
 
   const getNextPage = () => {
     getTask.run({
       limit: LIMIT_TASK_PER_PAGE,
-      skip: (page + 1) * LIMIT_TASK_PER_PAGE,
+      skip: (page === 1 ? page : page + 1) * LIMIT_TASK_PER_PAGE,
     })
     setPage(page + 1)
+    history.push(`/task?page=${page}`)
   }
 
   const getTaskDetailHandle = (id: string) => {
@@ -177,10 +184,10 @@ const Tasks = () => {
           )}
           <TableRow>
             <TableCell>
-              <IconButton>
+              <IconButton disabled={page === 1 ? true : false}>
                 <ArrowBackIosIcon onClick={() => getPrevPage()} fontSize="large" />
               </IconButton>
-              <IconButton>
+              <IconButton >
                 <ArrowForwardIosIcon onClick={() => getNextPage()} fontSize="large" />
               </IconButton>
             </TableCell>
