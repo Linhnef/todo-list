@@ -79,7 +79,7 @@ const Tasks = () => {
       limit: LIMIT_TASK_PER_PAGE,
       skip: page - 1,
     })
-    history.push(`/task?page=${0}`)
+    history.push(`/task?page=${page}`)
   }
 
   const getPrevPage = () => {
@@ -187,7 +187,7 @@ const Tasks = () => {
               <IconButton disabled={page === 1 ? true : false}>
                 <ArrowBackIosIcon onClick={() => getPrevPage()} fontSize="large" />
               </IconButton>
-              <IconButton >
+              <IconButton>
                 <ArrowForwardIosIcon onClick={() => getNextPage()} fontSize="large" />
               </IconButton>
             </TableCell>
