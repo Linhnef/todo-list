@@ -61,7 +61,7 @@ const Tasks = () => {
       limit: LIMIT_TASK_PER_PAGE,
       skip: page - 1,
     })
-    history.push(`/task?page=${page}`
+    history.push(`/task?page=${page}`)
   }
 
   const getPrevPage = () => {
@@ -70,7 +70,7 @@ const Tasks = () => {
       skip: (page - 1) * LIMIT_TASK_PER_PAGE,
     })
     setPage(page - 1)
-    history.push(`/task?page=${page}`
+    history.push(`/task?page=${page}`)
   }
 
   const getNextPage = () => {
@@ -79,7 +79,7 @@ const Tasks = () => {
       skip: (page === 1 ? page : page + 1) * LIMIT_TASK_PER_PAGE,
     })
     setPage(page + 1)
-    history.push(`/task?page=${page}`
+    history.push(`/task?page=${page}`)
   }
 
   return (
