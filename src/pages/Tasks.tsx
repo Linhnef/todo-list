@@ -25,7 +25,7 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
 import FirstPageIcon from "@material-ui/icons/FirstPage"
 import { InputOutlined } from "../components/inputs/InputOutlined"
 import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
-import { useState, ChangeEvent, useContext } from "react"
+import { useState, ChangeEvent, useContext, useEffect } from "react"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
 import { AddTaskRequest, GetTaskRequest } from "../services/api/createAppApiClient"
@@ -33,17 +33,18 @@ import { TaskContext } from "../contexts/taskContext"
 import { TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
 import { Heading5 } from "../components/Text/Heading5"
-import { useHistory } from "react-router"
+import { useLocation } from "react-router"
 const LIMIT_TASK_PER_PAGE = 3
 
 const Tasks = () => {
-  const history = useHistory()
+  const UrlSearch = useLocation().search
+  const num = new URLSearchParams(url).get("page")
   const api = useAppApiClient()
   const { tasks, setTasks } = useContext(TaskContext)
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [description, setDescription] = useState<string>("")
   const [checked, setChecked] = useState(false)
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(num ? parseInt(num) : 1)
   const addTask = useAsync(async (addTaskRequest: AddTaskRequest) => {
     const result = await api.addTask(addTaskRequest)
     if (!result) return
@@ -72,7 +73,6 @@ const Tasks = () => {
     setPage(page - 1)
     history.push(`/task?page=${page}`)
   }
-
   const getNextPage = () => {
     getTask.run({
       limit: LIMIT_TASK_PER_PAGE,
@@ -81,7 +81,18 @@ const Tasks = () => {
     setPage(page + 1)
     history.push(`/task?page=${page}`)
   }
-
+   useEffect(() => {
+    getTask.run({
+      limit: LIMIT_TASK_PER_PAGE,
+      skip: page,
+    })
+  }, [page])
+  useEffect(() => {
+      getTask.run({
+      limit: LIMIT_TASK_PER_PAGE,
+      skip: page - 1,
+    })
+  }, [page])
   return (
     <TaskContextProvider>
       <TasksHeader color="default" position="static">
