@@ -7,7 +7,6 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  Typography,
   IconButton,
   Dialog,
   Paper,
@@ -33,18 +32,17 @@ import { TaskContext } from "../contexts/taskContext"
 import { TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
 import { Heading5 } from "../components/Text/Heading5"
-import { useLocation } from "react-router"
+import useQuery from "../hooks/useQuery"
 const LIMIT_TASK_PER_PAGE = 3
 
 const Tasks = () => {
-  const UrlSearch = useLocation().search
-  const num = new URLSearchParams(url).get("page")
+  const { query, patchQuery } = useQuery<{ page: number }>({ page: 1 })
   const api = useAppApiClient()
   const { tasks, setTasks } = useContext(TaskContext)
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [description, setDescription] = useState<string>("")
   const [checked, setChecked] = useState(false)
-  const [page, setPage] = useState(num ? parseInt(num) : 1)
+  const [page, setPage] = useState(query.page ? query.page : 1)
   const addTask = useAsync(async (addTaskRequest: AddTaskRequest) => {
     const result = await api.addTask(addTaskRequest)
     if (!result) return
@@ -56,55 +54,23 @@ const Tasks = () => {
     if (!response) return
     setTasks(response.data)
   })
-
-<<<<<<< HEAD
-<<<<<<< HEAD
   const getFirstPage = () => {
-    setPage(1)
+    patchQuery({ page: 1 })
   }
 
   const getPrevPage = () => {
-    setPage(page-1)
+    patchQuery({ page: page - 1 })
   }
   const getNextPage = () => {
-    setPage(page === 1 ? page : page + 1)
+    patchQuery({ page: page === 1 ? page : page + 1 })
   }
-   useEffect(() => {
+  useEffect(() => {
     getTask.run({
       limit: LIMIT_TASK_PER_PAGE,
       skip: page * LIMIT_TASK_PER_PAGE,
     })
   }, [page])
-=======
-=======
->>>>>>> update add firstpage - nextpage - prevpage functions
-  const firstPage = () => {
-    getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: 0,
-    })
-  }
 
-  const prevPage = () => {
-    getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: (page - 1) * LIMIT_TASK_PER_PAGE,
-    })
-    setPage(page - 1)
-  }
-
-  const nextPage = () => {
-    getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: (page + 1) * LIMIT_TASK_PER_PAGE,
-    })
-    setPage(page + 1)
-  }
-
-<<<<<<< HEAD
->>>>>>> update add firstpage - nextpage - prevpage functions
-=======
->>>>>>> update add firstpage - nextpage - prevpage functions
   return (
     <TaskContextProvider>
       <TasksHeader color="default" position="static">
@@ -142,15 +108,7 @@ const Tasks = () => {
                   <AllInboxIcon fontSize="large" />
                 </Badge>
               </TaskButton>
-<<<<<<< HEAD
-<<<<<<< HEAD
               <TaskButton onClick={() => getFirstPage()}>
-=======
-              <TaskButton onClick={() => firstPage()}>
->>>>>>> update add firstpage - nextpage - prevpage functions
-=======
-              <TaskButton onClick={() => firstPage()}>
->>>>>>> update add firstpage - nextpage - prevpage functions
                 <Badge color="secondary">
                   <FirstPageIcon fontSize="large" />
                 </Badge>
@@ -159,7 +117,6 @@ const Tasks = () => {
           </Grid>
         </Toolbar>
       </TasksHeader>
-
       <MuiTable>
         <TableBody>
           {tasks ? (
@@ -193,22 +150,11 @@ const Tasks = () => {
           )}
           <TableRow>
             <TableCell>
-<<<<<<< HEAD
               <IconButton disabled={page === 1 ? true : false}>
                 <ArrowBackIosIcon onClick={() => getPrevPage()} fontSize="large" />
               </IconButton>
               <IconButton>
-                <ArrowForwardIosIcon onClick={() => getNextPage()}  fontSize="large" />
-=======
-              <IconButton>
-                <ArrowBackIosIcon onClick={() => prevPage()} fontSize="large" />
-              </IconButton>
-              <IconButton>
-                <ArrowForwardIosIcon onClick={() => nextPage()} fontSize="large" />
-<<<<<<< HEAD
->>>>>>> update add firstpage - nextpage - prevpage functions
-=======
->>>>>>> update add firstpage - nextpage - prevpage functions
+                <ArrowForwardIosIcon onClick={() => getNextPage()} fontSize="large" />
               </IconButton>
             </TableCell>
           </TableRow>

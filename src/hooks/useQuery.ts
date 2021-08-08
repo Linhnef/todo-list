@@ -1,19 +1,19 @@
-import * as queryString from "query-string"
-import { useEffect, useState } from "react"
-import { useHistory } from "react-router"
+import * as queryStringLib from "query-string"
+import { useCallback, useEffect, useState } from "react"
+import { useHistory, useLocation } from "react-router"
 
-const useQuery = () => {
+const useQuery = <TQuery>(initialQuery: TQuery) => {
   const history = useHistory()
-  const { parse, stringify } = queryString
-  const [query, setQuery] = useState<any>()
-  const queryUrl = window.location.search
-  const patchQuery = (objs: object) => {
-    history.push(window.location.pathname + `?${stringify(objs)}`)
+  const queryString = useLocation().search
+  const { parse, stringify } = queryStringLib
+  const [query, setQuery] = useState<TQuery | any>(initialQuery)
+  const patchQuery = (obj: TQuery) => {
+    history.push({ search: stringify(obj) })
   }
   useEffect(() => {
-    const queryParams = parse(queryUrl)
+    const queryParams = parse(queryString)
     setQuery(queryParams)
-  }, [])
+  }, [queryString])
   return { query, patchQuery }
 }
 
