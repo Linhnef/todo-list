@@ -1,287 +1,236 @@
-import {
-  AppBar,
-  Grid,
-  Toolbar,
-  Badge,
-  Table as MuiTable,
-  TableBody,
-  TableCell,
-  TableRow,
-  Typography,
-  IconButton,
-  Dialog,
-  Paper,
-  Checkbox,
-} from "@material-ui/core"
-import styled from "styled-components"
-import NoteAddIcon from "@material-ui/icons/NoteAdd"
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline"
-import CancelIcon from "@material-ui/icons/Cancel"
-import AllInboxIcon from "@material-ui/icons/AllInbox"
-import UpdateIcon from "@material-ui/icons/Update"
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline"
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos"
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
-import FirstPageIcon from "@material-ui/icons/FirstPage"
-import { InputOutlined } from "../components/inputs/InputOutlined"
-import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
-import { useState, ChangeEvent, useContext, useEffect } from "react"
-import { useAppApiClient } from "../hooks/useAppApiClient"
-import useAsync from "../hooks/useAsync"
-import { AddTaskRequest, GetTaskRequest } from "../services/api/createAppApiClient"
-import { TaskContext } from "../contexts/taskContext"
-import { TaskContextProvider } from "../contexts/taskContext"
-import { Heading2 } from "../components/Text/Heading2"
-import { Heading5 } from "../components/Text/Heading5"
-import { useLocation } from "react-router"
-const LIMIT_TASK_PER_PAGE = 3
+  import {
+    AppBar,
+    Grid,
+    Toolbar,
+    Badge,
+    Table as MuiTable,
+    TableBody,
+    TableCell,
+    TableRow,
+    IconButton,
+    Dialog,
+    Paper,
+    Checkbox,
+  } from "@material-ui/core"
+  import styled from "styled-components"
+  import NoteAddIcon from "@material-ui/icons/NoteAdd"
+  import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline"
+  import CancelIcon from "@material-ui/icons/Cancel"
+  import AllInboxIcon from "@material-ui/icons/AllInbox"
+  import UpdateIcon from "@material-ui/icons/Update"
+  import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline"
+  import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos"
+  import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
+  import FirstPageIcon from "@material-ui/icons/FirstPage"
+  import { InputOutlined } from "../components/inputs/InputOutlined"
+  import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
+  import { useState, ChangeEvent, useContext, useEffect } from "react"
+  import { useAppApiClient } from "../hooks/useAppApiClient"
+  import useAsync from "../hooks/useAsync"
+  import { AddTaskRequest, GetTaskRequest } from "../services/api/createAppApiClient"
+  import { TaskContext } from "../contexts/taskContext"
+  import { TaskContextProvider } from "../contexts/taskContext"
+  import { Heading2 } from "../components/Text/Heading2"
+  import { Heading5 } from "../components/Text/Heading5"
+  import useQuery from "../hooks/useQuery"
+  const LIMIT_TASK_PER_PAGE = 3
 
-const Tasks = () => {
-  const UrlSearch = useLocation().search
-  const num = new URLSearchParams(url).get("page")
-  const api = useAppApiClient()
-  const { tasks, setTasks } = useContext(TaskContext)
-  const [isAddOpen, setIsAddOpen] = useState(false)
-  const [description, setDescription] = useState<string>("")
-  const [checked, setChecked] = useState(false)
-  const [page, setPage] = useState(num ? parseInt(num) : 1)
-  const addTask = useAsync(async (addTaskRequest: AddTaskRequest) => {
-    const result = await api.addTask(addTaskRequest)
-    if (!result) return
-    setDescription("")
-    setIsAddOpen(false)
-  })
-  const getTask = useAsync(async (getTaskRequest: GetTaskRequest) => {
-    const response = await api.getTasks(getTaskRequest)
-    if (!response) return
-    setTasks(response.data)
-  })
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-  const getFirstPage = () => {
-    setPage(1)
-  }
-
-  const getPrevPage = () => {
-    setPage(page-1)
-  }
-  const getNextPage = () => {
-    setPage(page === 1 ? page : page + 1)
-  }
-   useEffect(() => {
-    getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: page * LIMIT_TASK_PER_PAGE,
+  const Tasks = () => {
+    const { query, patchQuery } = useQuery<{ page: number }>({ page: 1 })
+    const api = useAppApiClient()
+    const { tasks, setTasks } = useContext(TaskContext)
+    const [isAddOpen, setIsAddOpen] = useState(false)
+    const [description, setDescription] = useState<string>("")
+    const [checked, setChecked] = useState(false)
+    const [page, setPage] = useState(query.page ? parseInt(query.page) : 1)
+    const addTask = useAsync(async (addTaskRequest: AddTaskRequest) => {
+      const result = await api.addTask(addTaskRequest)
+      if (!result) return
+      setDescription("")
+      setIsAddOpen(false)
     })
-  }, [page])
-=======
-=======
->>>>>>> update add firstpage - nextpage - prevpage functions
-  const firstPage = () => {
-    getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: 0,
+    const getTask = useAsync(async (getTaskRequest: GetTaskRequest) => {
+      const response = await api.getTasks(getTaskRequest)
+      if (!response) return
+      setTasks(response.data)
     })
+    const getFirstPage = () => {
+      patchQuery({ page: 1 })
+      setPage(1)
+    }
+
+    const getPrevPage = () => {
+      patchQuery({ page: page - 1 })
+      setPage(page - 1)
+    }
+    const getNextPage = () => {
+      patchQuery({ page: page === 1 ? page : page + 1 })
+      setPage(page + 1)
+    }
+    useEffect(() => {
+      getTask.run({
+        limit: LIMIT_TASK_PER_PAGE,
+        skip: page * LIMIT_TASK_PER_PAGE,
+      })
+    }, [page])
+
+    return (
+      <TaskContextProvider>
+        <TasksHeader color="default" position="static">
+          <Toolbar>
+            <Grid container>
+              <TasksHeaderGrid item sm={12}>
+                <TasksHeaderBackground item>
+                  <Heading2>TODO LIST</Heading2>
+                </TasksHeaderBackground>
+                <TaskButton
+                  onClick={() => {
+                    getTask.run({ completed: false })
+                  }}
+                >
+                  <Badge color="secondary">
+                    <CheckCircleOutlineIcon fontSize="large" />
+                  </Badge>
+                </TaskButton>
+                <TaskButton
+                  onClick={() => {
+                    getTask.run({ completed: true })
+                  }}
+                >
+                  <Badge color="secondary">
+                    <CancelIcon fontSize="large" />
+                  </Badge>
+                </TaskButton>
+                <TaskButton onClick={() => setIsAddOpen(true)}>
+                  <Badge color="secondary">
+                    <NoteAddIcon fontSize="large" />
+                  </Badge>
+                </TaskButton>
+                <TaskButton onClick={() => getTask.run({})}>
+                  <Badge color="secondary">
+                    <AllInboxIcon fontSize="large" />
+                  </Badge>
+                </TaskButton>
+                <TaskButton onClick={() => getFirstPage()}>
+                  <Badge color="secondary">
+                    <FirstPageIcon fontSize="large" />
+                  </Badge>
+                </TaskButton>
+              </TasksHeaderGrid>
+            </Grid>
+          </Toolbar>
+        </TasksHeader>
+        <MuiTable>
+          <TableBody>
+            {tasks ? (
+              tasks.map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <Heading5>{item.description}</Heading5>
+                  </TableCell>
+                  <TableCell>
+                    {item.completed ? <CheckCircleOutlineIcon fontSize="large" /> : <CancelIcon fontSize="large" />}
+                  </TableCell>
+                  <TableCell>
+                    <IconButtonTable>
+                      <ArrowForwardIosIcon fontSize="large" />
+                    </IconButtonTable>
+                    <IconButtonTable>
+                      <UpdateIcon fontSize="large" />
+                    </IconButtonTable>
+                    <IconButtonTable>
+                      <DeleteOutlineIcon fontSize="large" />
+                    </IconButtonTable>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : getTask.loading ? (
+              <Heading2>Loading</Heading2>
+            ) : getTask.error ? (
+              <Heading2>Error</Heading2>
+            ) : (
+              <Heading2>Empty</Heading2>
+            )}
+            <TableRow>
+              <TableCell>
+                <IconButton disabled={page === 1 ? true : false}>
+                  <ArrowBackIosIcon onClick={() => getPrevPage()} fontSize="large" />
+                </IconButton>
+                <IconButton>
+                  <ArrowForwardIosIcon onClick={() => getNextPage()} fontSize="large" />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </MuiTable>
+
+        <Dialog open={isAddOpen}>
+          <AddPaper>
+            <AddInput
+              value={description}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                setDescription(event.target.value)
+              }}
+              label="Description"
+            />
+            <Checkbox color="default" onClick={() => setChecked(!checked)} checked={checked} />
+            <ButtonOutlined
+              onClick={() => {
+                addTask.run({ description: description, completed: checked })
+              }}
+            >
+              Submit
+            </ButtonOutlined>
+            <ButtonOutlined
+              onClick={() => {
+                setIsAddOpen(false)
+              }}
+            >
+              Cancel
+            </ButtonOutlined>
+          </AddPaper>
+        </Dialog>
+      </TaskContextProvider>
+    )
   }
 
-  const prevPage = () => {
-    getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: (page - 1) * LIMIT_TASK_PER_PAGE,
-    })
-    setPage(page - 1)
-  }
+  const TasksHeader = styled(AppBar)`
+    width: 100%;
+    background-color: white;
+    margin-bottom: 5%;
+  `
 
-  const nextPage = () => {
-    getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: (page + 1) * LIMIT_TASK_PER_PAGE,
-    })
-    setPage(page + 1)
-  }
+  const TasksHeaderGrid = styled(Grid)`
+    border: 1px solid;
+  `
 
-<<<<<<< HEAD
->>>>>>> update add firstpage - nextpage - prevpage functions
-=======
->>>>>>> update add firstpage - nextpage - prevpage functions
-  return (
-    <TaskContextProvider>
-      <TasksHeader color="default" position="static">
-        <Toolbar>
-          <Grid container>
-            <TasksHeaderGrid item sm={12}>
-              <TasksHeaderBackground item>
-                <Heading2>TODO LIST</Heading2>
-              </TasksHeaderBackground>
-              <TaskButton
-                onClick={() => {
-                  getTask.run({ completed: false })
-                }}
-              >
-                <Badge color="secondary">
-                  <CheckCircleOutlineIcon fontSize="large" />
-                </Badge>
-              </TaskButton>
-              <TaskButton
-                onClick={() => {
-                  getTask.run({ completed: true })
-                }}
-              >
-                <Badge color="secondary">
-                  <CancelIcon fontSize="large" />
-                </Badge>
-              </TaskButton>
-              <TaskButton onClick={() => setIsAddOpen(true)}>
-                <Badge color="secondary">
-                  <NoteAddIcon fontSize="large" />
-                </Badge>
-              </TaskButton>
-              <TaskButton onClick={() => getTask.run({})}>
-                <Badge color="secondary">
-                  <AllInboxIcon fontSize="large" />
-                </Badge>
-              </TaskButton>
-<<<<<<< HEAD
-<<<<<<< HEAD
-              <TaskButton onClick={() => getFirstPage()}>
-=======
-              <TaskButton onClick={() => firstPage()}>
->>>>>>> update add firstpage - nextpage - prevpage functions
-=======
-              <TaskButton onClick={() => firstPage()}>
->>>>>>> update add firstpage - nextpage - prevpage functions
-                <Badge color="secondary">
-                  <FirstPageIcon fontSize="large" />
-                </Badge>
-              </TaskButton>
-            </TasksHeaderGrid>
-          </Grid>
-        </Toolbar>
-      </TasksHeader>
+  const TaskButton = styled(IconButton)`
+    float: right;
+    display: block;
+    &:hover {
+      cursor: pointer;
+    }
+  `
 
-      <MuiTable>
-        <TableBody>
-          {tasks ? (
-            tasks.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>
-                  <Heading5>{item.description}</Heading5>
-                </TableCell>
-                <TableCell>
-                  {item.completed ? <CheckCircleOutlineIcon fontSize="large" /> : <CancelIcon fontSize="large" />}
-                </TableCell>
-                <TableCell>
-                  <IconButtonTable>
-                    <ArrowForwardIosIcon fontSize="large" />
-                  </IconButtonTable>
-                  <IconButtonTable>
-                    <UpdateIcon fontSize="large" />
-                  </IconButtonTable>
-                  <IconButtonTable>
-                    <DeleteOutlineIcon fontSize="large" />
-                  </IconButtonTable>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : getTask.loading ? (
-            <Heading2>Loading</Heading2>
-          ) : getTask.error ? (
-            <Heading2>Error</Heading2>
-          ) : (
-            <Heading2>Empty</Heading2>
-          )}
-          <TableRow>
-            <TableCell>
-<<<<<<< HEAD
-              <IconButton disabled={page === 1 ? true : false}>
-                <ArrowBackIosIcon onClick={() => getPrevPage()} fontSize="large" />
-              </IconButton>
-              <IconButton>
-                <ArrowForwardIosIcon onClick={() => getNextPage()}  fontSize="large" />
-=======
-              <IconButton>
-                <ArrowBackIosIcon onClick={() => prevPage()} fontSize="large" />
-              </IconButton>
-              <IconButton>
-                <ArrowForwardIosIcon onClick={() => nextPage()} fontSize="large" />
-<<<<<<< HEAD
->>>>>>> update add firstpage - nextpage - prevpage functions
-=======
->>>>>>> update add firstpage - nextpage - prevpage functions
-              </IconButton>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </MuiTable>
+  const TasksHeaderBackground = styled(Grid)`
+    display: block;
+    padding-top: 0.5%;
+    padding-left: 1%;
+    float: left;
+  `
 
-      <Dialog open={isAddOpen}>
-        <AddPaper>
-          <AddInput
-            value={description}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              setDescription(event.target.value)
-            }}
-            label="Description"
-          />
-          <Checkbox color="default" onClick={() => setChecked(!checked)} checked={checked} />
-          <ButtonOutlined
-            onClick={() => {
-              addTask.run({ description: description, completed: checked })
-            }}
-          >
-            Submit
-          </ButtonOutlined>
-          <ButtonOutlined
-            onClick={() => {
-              setIsAddOpen(false)
-            }}
-          >
-            Cancel
-          </ButtonOutlined>
-        </AddPaper>
-      </Dialog>
-    </TaskContextProvider>
-  )
-}
+  const AddPaper = styled(Paper)`
+    padding: 100px;
+  `
 
-const TasksHeader = styled(AppBar)`
-  width: 100%;
-  background-color: white;
-  margin-bottom: 5%;
-`
+  const AddInput = styled(InputOutlined)`
+    width: 80%;
+  `
+  const IconButtonTable = styled(IconButton)`
+    float: right;
+    &:hover {
+      cursor: pointer;
+    }
+  `
 
-const TasksHeaderGrid = styled(Grid)`
-  border: 1px solid;
-`
-
-const TaskButton = styled(IconButton)`
-  float: right;
-  display: block;
-  &:hover {
-    cursor: pointer;
-  }
-`
-
-const TasksHeaderBackground = styled(Grid)`
-  display: block;
-  padding-top: 0.5%;
-  padding-left: 1%;
-  float: left;
-`
-
-const AddPaper = styled(Paper)`
-  padding: 100px;
-`
-
-const AddInput = styled(InputOutlined)`
-  width: 80%;
-`
-const IconButtonTable = styled(IconButton)`
-  float: right;
-  &:hover {
-    cursor: pointer;
-  }
-`
-
-export default Tasks
+  export default Tasks
