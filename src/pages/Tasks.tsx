@@ -57,6 +57,7 @@ const Tasks = () => {
     setTasks(response.data)
   })
 
+<<<<<<< HEAD
   const getFirstPage = () => {
     setPage(1)
   }
@@ -73,6 +74,31 @@ const Tasks = () => {
       skip: page * LIMIT_TASK_PER_PAGE,
     })
   }, [page])
+=======
+  const firstPage = () => {
+    getTask.run({
+      limit: LIMIT_TASK_PER_PAGE,
+      skip: 0,
+    })
+  }
+
+  const prevPage = () => {
+    getTask.run({
+      limit: LIMIT_TASK_PER_PAGE,
+      skip: (page - 1) * LIMIT_TASK_PER_PAGE,
+    })
+    setPage(page - 1)
+  }
+
+  const nextPage = () => {
+    getTask.run({
+      limit: LIMIT_TASK_PER_PAGE,
+      skip: (page + 1) * LIMIT_TASK_PER_PAGE,
+    })
+    setPage(page + 1)
+  }
+
+>>>>>>> update add firstpage - nextpage - prevpage functions
   return (
     <TaskContextProvider>
       <TasksHeader color="default" position="static">
@@ -110,7 +136,11 @@ const Tasks = () => {
                   <AllInboxIcon fontSize="large" />
                 </Badge>
               </TaskButton>
+<<<<<<< HEAD
               <TaskButton onClick={() => getFirstPage()}>
+=======
+              <TaskButton onClick={() => firstPage()}>
+>>>>>>> update add firstpage - nextpage - prevpage functions
                 <Badge color="secondary">
                   <FirstPageIcon fontSize="large" />
                 </Badge>
@@ -153,11 +183,19 @@ const Tasks = () => {
           )}
           <TableRow>
             <TableCell>
+<<<<<<< HEAD
               <IconButton disabled={page === 1 ? true : false}>
                 <ArrowBackIosIcon onClick={() => getPrevPage()} fontSize="large" />
               </IconButton>
               <IconButton>
                 <ArrowForwardIosIcon onClick={() => getNextPage()}  fontSize="large" />
+=======
+              <IconButton>
+                <ArrowBackIosIcon onClick={() => prevPage()} fontSize="large" />
+              </IconButton>
+              <IconButton>
+                <ArrowForwardIosIcon onClick={() => nextPage()} fontSize="large" />
+>>>>>>> update add firstpage - nextpage - prevpage functions
               </IconButton>
             </TableCell>
           </TableRow>
