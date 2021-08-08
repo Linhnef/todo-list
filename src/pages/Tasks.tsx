@@ -58,33 +58,19 @@ const Tasks = () => {
   })
 
   const getFirstPage = () => {
-    getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: page - 1,
-    })
-    history.push(`/task?page=${page}`)
+    setPage(1)
   }
 
   const getPrevPage = () => {
-    getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: (page - 1) * LIMIT_TASK_PER_PAGE,
-    })
-    setPage(page - 1)
-    history.push(`/task?page=${page}`)
+    setPage(page-1)
   }
   const getNextPage = () => {
-    getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: (page === 1 ? page : page + 1) * LIMIT_TASK_PER_PAGE,
-    })
-    setPage(page + 1)
-    history.push(`/task?page=${page}`)
+    setPage(page === 1 ? page : page + 1)
   }
    useEffect(() => {
     getTask.run({
       limit: LIMIT_TASK_PER_PAGE,
-      skip: page,
+      skip: page * LIMIT_TASK_PER_PAGE,
     })
   }, [page])
   return (
