@@ -58,6 +58,7 @@ const Tasks = () => {
   })
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   const getFirstPage = () => {
     setPage(1)
   }
@@ -75,6 +76,8 @@ const Tasks = () => {
     })
   }, [page])
 =======
+=======
+>>>>>>> update add firstpage - nextpage - prevpage functions
   const firstPage = () => {
     getTask.run({
       limit: LIMIT_TASK_PER_PAGE,
@@ -98,6 +101,9 @@ const Tasks = () => {
     setPage(page + 1)
   }
 
+<<<<<<< HEAD
+>>>>>>> update add firstpage - nextpage - prevpage functions
+=======
 >>>>>>> update add firstpage - nextpage - prevpage functions
   return (
     <TaskContextProvider>
@@ -137,7 +143,11 @@ const Tasks = () => {
                 </Badge>
               </TaskButton>
 <<<<<<< HEAD
+<<<<<<< HEAD
               <TaskButton onClick={() => getFirstPage()}>
+=======
+              <TaskButton onClick={() => firstPage()}>
+>>>>>>> update add firstpage - nextpage - prevpage functions
 =======
               <TaskButton onClick={() => firstPage()}>
 >>>>>>> update add firstpage - nextpage - prevpage functions
@@ -195,6 +205,9 @@ const Tasks = () => {
               </IconButton>
               <IconButton>
                 <ArrowForwardIosIcon onClick={() => nextPage()} fontSize="large" />
+<<<<<<< HEAD
+>>>>>>> update add firstpage - nextpage - prevpage functions
+=======
 >>>>>>> update add firstpage - nextpage - prevpage functions
               </IconButton>
             </TableCell>
