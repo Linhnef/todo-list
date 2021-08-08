@@ -87,12 +87,6 @@ const Tasks = () => {
       skip: page,
     })
   }, [page])
-  useEffect(() => {
-      getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: page - 1,
-    })
-  }, [page])
   return (
     <TaskContextProvider>
       <TasksHeader color="default" position="static">
