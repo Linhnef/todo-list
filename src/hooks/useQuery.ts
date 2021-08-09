@@ -6,8 +6,8 @@ const useQuery = <TQuery>(initialQuery: TQuery) => {
   const history = useHistory()
   const queryString = useLocation().search
   const [query, setQuery] = useState<TQuery>(initialQuery)
-  const patchQuery = (updateQuery: TQuery) => {
-    history.push({ search: stringify(updateQuery) })
+  const patchQuery = (updatedQuery: TQuery) => {
+    history.push({ search: stringify(updatedQuery) })
   }
   useEffect(() => {
     const queryParams = parse(queryString) as unknown as TQuery
