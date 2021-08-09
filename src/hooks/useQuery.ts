@@ -5,12 +5,12 @@ import { useHistory, useLocation } from "react-router"
 const useQuery = <TQuery>(initialQuery: TQuery) => {
   const history = useHistory()
   const queryString = useLocation().search
-  const [query, setQuery] = useState<TQuery | any>(initialQuery)
-  const patchQuery = (obj: TQuery) => {
-    history.push({ search: stringify(obj) })
+  const [query, setQuery] = useState<TQuery>(initialQuery)
+  const patchQuery = (updateQuery: TQuery) => {
+    history.push({ search: stringify(updateQuery) })
   }
   useEffect(() => {
-    const queryParams = parse(queryString)
+    const queryParams = parse(queryString) as unknown as TQuery
     setQuery(queryParams)
   }, [queryString])
   return { query, patchQuery }
