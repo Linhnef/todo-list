@@ -37,7 +37,7 @@ const LIMIT_TASK_PER_PAGE = 3
 
 const Tasks = () => {
   const { query, patchQuery } = useQuery<{ page: number }>({ page: 1 })
-  const pageInQuery = parseInt(query.page)
+  const pageInQuery = query.page
   const api = useAppApiClient()
   const { tasks, setTasks } = useContext(TaskContext)
   const [isAddOpen, setIsAddOpen] = useState(false)
