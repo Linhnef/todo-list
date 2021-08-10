@@ -81,13 +81,15 @@ const Tasks = () => {
     })
   }
 
-  if (page !== pageInQuery) {
-    setPage(pageInQuery)
-    getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: page * LIMIT_TASK_PER_PAGE,
-    })
-  }
+  useEffect(() => {
+    if (page !== pageInQuery) {
+      setPage(pageInQuery)
+      getTask.run({
+        limit: LIMIT_TASK_PER_PAGE,
+        skip: page * LIMIT_TASK_PER_PAGE,
+      })
+    }
+  }, [pageInQuery])
 
   return (
     <TaskContextProvider>
