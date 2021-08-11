@@ -37,13 +37,11 @@ const LIMIT_TASK_PER_PAGE = 3
 
 const Tasks = () => {
   const { query, patchQuery } = useQuery<{ page: number }>({ page: 1 })
-  const pageInQuery = query.page
   const api = useAppApiClient()
   const { tasks, setTasks } = useContext(TaskContext)
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [description, setDescription] = useState<string>("")
   const [checked, setChecked] = useState(false)
-  const [page, setPage] = useState(query.page ? pageInQuery : 1)
   const addTask = useAsync(async (addTaskRequest: AddTaskRequest) => {
     const result = await api.addTask(addTaskRequest)
     if (!result) return
@@ -57,39 +55,21 @@ const Tasks = () => {
   })
   const getFirstPage = () => {
     patchQuery({ page: 1 })
-    setPage(1)
-    getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: page * LIMIT_TASK_PER_PAGE,
-    })
   }
 
   const getPrevPage = () => {
-    patchQuery({ page: page - 1 })
-    setPage(page - 1)
-    getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: page * LIMIT_TASK_PER_PAGE,
-    })
+    patchQuery({ page: query.page - 1 })
   }
   const getNextPage = () => {
-    patchQuery({ page: page === 1 ? page : page + 1 })
-    setPage(page + 1)
-    getTask.run({
-      limit: LIMIT_TASK_PER_PAGE,
-      skip: page * LIMIT_TASK_PER_PAGE,
-    })
+    patchQuery({ page: query.page === 1 ? query.page : query.page + 1 })
   }
 
   useEffect(() => {
-    if (page !== pageInQuery) {
-      setPage(pageInQuery)
-      getTask.run({
-        limit: LIMIT_TASK_PER_PAGE,
-        skip: page * LIMIT_TASK_PER_PAGE,
-      })
-    }
-  }, [pageInQuery])
+    getTask.run({
+      limit: LIMIT_TASK_PER_PAGE,
+      skip: query.page * LIMIT_TASK_PER_PAGE,
+    })
+  }, [query.page])
 
   return (
     <TaskContextProvider>
@@ -170,7 +150,7 @@ const Tasks = () => {
           )}
           <TableRow>
             <TableCell>
-              <IconButton disabled={page === 1 ? true : false}>
+              <IconButton disabled={query.page === 1 ? true : false}>
                 <ArrowBackIosIcon onClick={() => getPrevPage()} fontSize="large" />
               </IconButton>
               <IconButton>
