@@ -27,7 +27,7 @@ import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 import { useState, ChangeEvent, useContext, useEffect } from "react"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
-import { AddTaskRequest, GetTaskRequest } from "../services/api/createAppApiClient"
+import { AddTaskRequest, DeleteTaskByIdRequest, GetTaskRequest } from "../services/api/createAppApiClient"
 import { TaskContext } from "../contexts/taskContext"
 import { TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
@@ -42,7 +42,6 @@ const Tasks = () => {
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [description, setDescription] = useState<string>("")
   const [checked, setChecked] = useState(false)
-  const [page, setPage] = useState(query.page ? query.page : 1)
   const addTask = useAsync(async (addTaskRequest: AddTaskRequest) => {
     const result = await api.addTask(addTaskRequest)
     if (!result) return
@@ -54,22 +53,28 @@ const Tasks = () => {
     if (!response) return
     setTasks(response.data)
   })
+  const deleteTask = useAsync(async (deleteTaskByIdRequest: DeleteTaskByIdRequest) => {
+    const response = await api.DeleteTaskById(deleteTaskByIdRequest)
+    if (!response?.success) return
+    getTask.run({})
+  })
+
   const getFirstPage = () => {
     patchQuery({ page: 1 })
   }
-
   const getPrevPage = () => {
-    patchQuery({ page: page - 1 })
+    patchQuery({ page: query.page - 1 })
   }
   const getNextPage = () => {
-    patchQuery({ page: page === 1 ? page : page + 1 })
+    patchQuery({ page: query.page === 1 ? query.page : query.page + 1 })
   }
+
   useEffect(() => {
     getTask.run({
       limit: LIMIT_TASK_PER_PAGE,
-      skip: page * LIMIT_TASK_PER_PAGE,
+      skip: query.page * LIMIT_TASK_PER_PAGE,
     })
-  }, [page])
+  }, [query.page])
 
   return (
     <TaskContextProvider>
@@ -135,7 +140,7 @@ const Tasks = () => {
                   <IconButtonTable>
                     <UpdateIcon fontSize="large" />
                   </IconButtonTable>
-                  <IconButtonTable>
+                  <IconButtonTable onClick={() => deleteTask.run({ _id: item._id })}>
                     <DeleteOutlineIcon fontSize="large" />
                   </IconButtonTable>
                 </TableCell>
@@ -150,7 +155,7 @@ const Tasks = () => {
           )}
           <TableRow>
             <TableCell>
-              <IconButton disabled={page === 1 ? true : false}>
+              <IconButton disabled={query.page === 1 ? true : false}>
                 <ArrowBackIosIcon onClick={() => getPrevPage()} fontSize="large" />
               </IconButton>
               <IconButton>
