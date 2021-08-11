@@ -7,7 +7,6 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  Typography,
   IconButton,
   Dialog,
   Paper,
@@ -22,9 +21,10 @@ import UpdateIcon from "@material-ui/icons/Update"
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline"
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos"
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
+import FirstPageIcon from "@material-ui/icons/FirstPage"
 import { InputOutlined } from "../components/inputs/InputOutlined"
 import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
-import { useState, ChangeEvent, useContext } from "react"
+import { useState, ChangeEvent, useContext, useEffect } from "react"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
 import { AddTaskRequest, GetTaskRequest } from "../services/api/createAppApiClient"
@@ -32,8 +32,11 @@ import { TaskContext } from "../contexts/taskContext"
 import { TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
 import { Heading5 } from "../components/Text/Heading5"
+import useQuery from "../hooks/useQuery"
+const LIMIT_TASK_PER_PAGE = 3
 
 const Tasks = () => {
+  const { query, patchQuery } = useQuery<{ page: number }>({ page: 1 })
   const api = useAppApiClient()
   const { tasks, setTasks } = useContext(TaskContext)
   const [isAddOpen, setIsAddOpen] = useState(false)
@@ -50,6 +53,24 @@ const Tasks = () => {
     if (!response) return
     setTasks(response.data)
   })
+  const getFirstPage = () => {
+    patchQuery({ page: 1 })
+  }
+
+  const getPrevPage = () => {
+    patchQuery({ page: query.page - 1 })
+  }
+  const getNextPage = () => {
+    patchQuery({ page: query.page === 1 ? query.page : query.page + 1 })
+  }
+
+  useEffect(() => {
+    getTask.run({
+      limit: LIMIT_TASK_PER_PAGE,
+      skip: query.page * LIMIT_TASK_PER_PAGE,
+    })
+  }, [query.page])
+
   return (
     <TaskContextProvider>
       <TasksHeader color="default" position="static">
@@ -87,11 +108,15 @@ const Tasks = () => {
                   <AllInboxIcon fontSize="large" />
                 </Badge>
               </TaskButton>
+              <TaskButton onClick={() => getFirstPage()}>
+                <Badge color="secondary">
+                  <FirstPageIcon fontSize="large" />
+                </Badge>
+              </TaskButton>
             </TasksHeaderGrid>
           </Grid>
         </Toolbar>
       </TasksHeader>
-
       <MuiTable>
         <TableBody>
           {tasks ? (
@@ -125,11 +150,11 @@ const Tasks = () => {
           )}
           <TableRow>
             <TableCell>
-              <IconButton>
-                <ArrowBackIosIcon fontSize="large" />
+              <IconButton disabled={query.page === 1 ? true : false}>
+                <ArrowBackIosIcon onClick={() => getPrevPage()} fontSize="large" />
               </IconButton>
               <IconButton>
-                <ArrowForwardIosIcon fontSize="large" />
+                <ArrowForwardIosIcon onClick={() => getNextPage()} fontSize="large" />
               </IconButton>
             </TableCell>
           </TableRow>
