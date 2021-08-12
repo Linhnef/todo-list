@@ -27,7 +27,7 @@ import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 import { useState, ChangeEvent, useContext, useEffect } from "react"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
-import { AddTaskRequest, DeleteTaskByIdRequest, GetTaskRequest } from "../services/api/createAppApiClient"
+import { AddTaskRequest, GetTaskRequest } from "../services/api/createAppApiClient"
 import { TaskContext } from "../contexts/taskContext"
 import { TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
@@ -53,10 +53,10 @@ const Tasks = () => {
     if (!response) return
     setTasks(response.data)
   })
-  const deleteTask = useAsync(async (deleteTaskByIdRequest: DeleteTaskByIdRequest) => {
-    const response = await api.DeleteTaskById(deleteTaskByIdRequest)
+  const deleteTask = useAsync(async (id: string) => {
+    const response = await api.deleteTaskById(id)
     if (!response?.success) return
-    getTask.run({})
+    patchQuery({ page: query.page })
   })
 
   const getFirstPage = () => {
@@ -74,7 +74,7 @@ const Tasks = () => {
       limit: LIMIT_TASK_PER_PAGE,
       skip: query.page * LIMIT_TASK_PER_PAGE,
     })
-  }, [query.page])
+  }, [])
 
   return (
     <TaskContextProvider>
@@ -140,7 +140,7 @@ const Tasks = () => {
                   <IconButtonTable>
                     <UpdateIcon fontSize="large" />
                   </IconButtonTable>
-                  <IconButtonTable onClick={() => deleteTask.run({ _id: item._id })}>
+                  <IconButtonTable onClick={() => deleteTask.run(item._id)}>
                     <DeleteOutlineIcon fontSize="large" />
                   </IconButtonTable>
                 </TableCell>
