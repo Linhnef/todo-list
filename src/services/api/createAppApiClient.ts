@@ -11,6 +11,7 @@ export const createAppApiClient = (api: AxiosInstance) => {
     updateCurrentUser: updateCurrentUser(api),
     addTask: addTask(api),
     getTasks: getTasks(api),
+    deleteTaskById: deleteTaskById(api),
   }
 }
 
@@ -123,6 +124,20 @@ const getTasks =
       const res = await api.get<GetTaskResponse>("/task", {
         params: data,
       })
+      return res.data
+    } catch (err) {}
+  }
+
+export type DeleteTaskByIdResponse = {
+  success: boolean
+  data: Task
+}
+
+const deleteTaskById =
+  (api: AxiosInstance) =>
+  async (id: string): Promise<DeleteTaskByIdResponse | undefined | null> => {
+    try {
+      const res = await api.delete<DeleteTaskByIdResponse>(`/task/${id}`)
       return res.data
     } catch (err) {}
   }

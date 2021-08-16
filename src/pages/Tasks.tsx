@@ -37,6 +37,7 @@ const LIMIT_TASK_PER_PAGE = 3
 
 const Tasks = () => {
   const { query, patchQuery } = useQuery<{ page: number }>({ page: 1 })
+  const page = typeof query.page === "string" ? parseInt(query.page) : query.page
   const api = useAppApiClient()
   const { tasks, setTasks } = useContext(TaskContext)
   const [isAddOpen, setIsAddOpen] = useState(false)
@@ -53,15 +54,20 @@ const Tasks = () => {
     if (!response) return
     setTasks(response.data)
   })
+  const deleteTask = useAsync(async (id: string) => {
+    const response = await api.deleteTaskById(id)
+    if (!response?.success) return
+    patchQuery({ page: query.page })
+  })
+
   const getFirstPage = () => {
     patchQuery({ page: 1 })
   }
-
   const getPrevPage = () => {
-    patchQuery({ page: query.page - 1 })
+    patchQuery({ page: page - 1 })
   }
   const getNextPage = () => {
-    patchQuery({ page: query.page === 1 ? query.page : query.page + 1 })
+    patchQuery({ page: page + 1 })
   }
 
   useEffect(() => {
@@ -69,7 +75,7 @@ const Tasks = () => {
       limit: LIMIT_TASK_PER_PAGE,
       skip: query.page * LIMIT_TASK_PER_PAGE,
     })
-  }, [query.page])
+  }, [])
 
   return (
     <TaskContextProvider>
@@ -135,7 +141,7 @@ const Tasks = () => {
                   <IconButtonTable>
                     <UpdateIcon fontSize="large" />
                   </IconButtonTable>
-                  <IconButtonTable>
+                  <IconButtonTable onClick={() => deleteTask.run(item._id)}>
                     <DeleteOutlineIcon fontSize="large" />
                   </IconButtonTable>
                 </TableCell>
