@@ -11,6 +11,7 @@ import {
   Dialog,
   Paper,
   Checkbox,
+  TextField,
 } from "@material-ui/core"
 import styled from "styled-components"
 import NoteAddIcon from "@material-ui/icons/NoteAdd"
@@ -27,11 +28,13 @@ import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 import { useState, ChangeEvent, useContext, useEffect } from "react"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
-import { AddTaskRequest, GetTaskRequest } from "../services/api/createAppApiClient"
+import { AddTaskRequest, GetTaskRequest, UpdateTaskByIdRequest } from "../services/api/createAppApiClient"
 import { TaskContext } from "../contexts/taskContext"
 import { TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
 import { Heading5 } from "../components/Text/Heading5"
+import { Task } from "../services/api/types/Task"
+import DoneIcon from "@material-ui/icons/Done"
 import useQuery from "../hooks/useQuery"
 const LIMIT_TASK_PER_PAGE = 3
 
@@ -43,6 +46,10 @@ const Tasks = () => {
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [description, setDescription] = useState<string>("")
   const [checked, setChecked] = useState(false)
+  const [showDetal, setShowDetail] = useState(false)
+  const [currentTask, setCurrentTask] = useState<Task | undefined>(undefined)
+  const [updateDescription, setUpdateDescription] = useState("")
+  const [updateCompleted, setUpdateCompleted] = useState<boolean | undefined>(undefined)
   const addTask = useAsync(async (addTaskRequest: AddTaskRequest) => {
     const result = await api.addTask(addTaskRequest)
     if (!result) return
@@ -59,6 +66,16 @@ const Tasks = () => {
     if (!response?.success) return
     patchQuery({ page: query.page })
   })
+
+  const updateTask = useAsync(async (data: UpdateTaskByIdRequest) => {
+    const response = await api.updateTaskById(data)
+    if (!response) return
+    patchQuery({ page: query.page })
+  })
+  const handleUpdateTask = () => {
+    if (currentTask)
+      updateTask.run({ _id: currentTask._id, data: { completed: updateCompleted, description: updateDescription } })
+  }
 
   const getFirstPage = () => {
     patchQuery({ page: 1 })
@@ -135,7 +152,7 @@ const Tasks = () => {
                   {item.completed ? <CheckCircleOutlineIcon fontSize="large" /> : <CancelIcon fontSize="large" />}
                 </TableCell>
                 <TableCell>
-                  <IconButtonTable>
+                  <IconButtonTable onClick={() => setShowDetail(!showDetal)}>
                     <ArrowForwardIosIcon fontSize="large" />
                   </IconButtonTable>
                   <IconButtonTable>
@@ -166,7 +183,31 @@ const Tasks = () => {
           </TableRow>
         </TableBody>
       </MuiTable>
-
+      <Dialog open={showDetal}>
+        {currentTask ? (
+          <UpdateTaskContainer>
+            <TextField
+              variant="outlined"
+              value={updateDescription}
+              defaultValue={currentTask.description}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => setUpdateDescription(event.target.value)}
+            />
+            {updateCompleted ? (
+              <TaskButton onClick={() => setUpdateCompleted(!updateCompleted)}>
+                <DoneIcon />
+              </TaskButton>
+            ) : (
+              <TaskButton onClick={() => setUpdateCompleted(!updateCompleted)}>
+                <CancelIcon />
+              </TaskButton>
+            )}
+            <ButtonOutlined onClick={() => setShowDetail(!showDetal)}>Close</ButtonOutlined>
+            <ButtonOutlined onClick={() => handleUpdateTask()}>Update</ButtonOutlined>
+          </UpdateTaskContainer>
+        ) : (
+          <> </>
+        )}
+      </Dialog>
       <Dialog open={isAddOpen}>
         <AddPaper>
           <AddInput
@@ -196,6 +237,19 @@ const Tasks = () => {
     </TaskContextProvider>
   )
 }
+
+const UpdateTaskContainer = styled.div`
+  display: flex;
+  padding: 1em;
+  overflow: hidden;
+  & svg {
+    margin: 0 1em;
+    color: #5aff;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+`
 
 const TasksHeader = styled(AppBar)`
   width: 100%;
