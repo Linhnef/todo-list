@@ -29,7 +29,6 @@ import { useState, ChangeEvent, useContext, useEffect } from "react"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
 import { AddTaskRequest, GetTaskRequest, UpdateTaskByIdRequest } from "../services/api/createAppApiClient"
-
 import { TaskContext } from "../contexts/taskContext"
 import { TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
@@ -76,6 +75,11 @@ const Tasks = () => {
   const handleUpdateTask = () => {
     if (currentTask)
       updateTask.run({ _id: currentTask._id, data: { completed: updateCompleted, description: updateDescription } })
+  }
+
+  const handleOpenUpdateTask = (item: task) => {
+    setCurrentTask(item)
+    setShowDetail(!showDetal)
   }
 
   const getFirstPage = () => {
@@ -153,7 +157,7 @@ const Tasks = () => {
                   {item.completed ? <CheckCircleOutlineIcon fontSize="large" /> : <CancelIcon fontSize="large" />}
                 </TableCell>
                 <TableCell>
-                  <IconButtonTable onClick={() => setShowDetail(!showDetal)}>
+                  <IconButtonTable onClick={() => handleOpenUpdateTask()}>
                     <ArrowForwardIosIcon fontSize="large" />
                   </IconButtonTable>
                   <IconButtonTable>
