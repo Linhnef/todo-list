@@ -37,6 +37,7 @@ const LIMIT_TASK_PER_PAGE = 3
 
 const Tasks = () => {
   const { query, patchQuery } = useQuery<{ page: number }>({ page: 1 })
+  const page = typeof query.page === "string" ? parseInt(query.page) : query.page
   const api = useAppApiClient()
   const { tasks, setTasks } = useContext(TaskContext)
   const [isAddOpen, setIsAddOpen] = useState(false)
@@ -63,10 +64,10 @@ const Tasks = () => {
     patchQuery({ page: 1 })
   }
   const getPrevPage = () => {
-    patchQuery({ page: query.page - 1 })
+    patchQuery({ page: page - 1 })
   }
   const getNextPage = () => {
-    patchQuery({ page: query.page === 1 ? query.page : query.page + 1 })
+    patchQuery({ page: page + 1 })
   }
 
   useEffect(() => {
