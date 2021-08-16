@@ -77,7 +77,7 @@ const Tasks = () => {
       updateTask.run({ _id: currentTask._id, data: { completed: updateCompleted, description: updateDescription } })
   }
 
-  const handleOpenUpdateTask = (item: task) => {
+  const handleOpenUpdateTask = (item: Task) => {
     setCurrentTask(item)
     setShowDetail(!showDetal)
   }
@@ -157,7 +157,7 @@ const Tasks = () => {
                   {item.completed ? <CheckCircleOutlineIcon fontSize="large" /> : <CancelIcon fontSize="large" />}
                 </TableCell>
                 <TableCell>
-                  <IconButtonTable onClick={() => handleOpenUpdateTask()}>
+                  <IconButtonTable onClick={() => handleOpenUpdateTask(item)}>
                     <ArrowForwardIosIcon fontSize="large" />
                   </IconButtonTable>
                   <IconButtonTable>
