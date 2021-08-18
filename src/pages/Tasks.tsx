@@ -192,9 +192,15 @@ const Tasks = () => {
               defaultValue={currentTask.description}
               onChange={(event: ChangeEvent<HTMLInputElement>) => setUpdateDescription(event.target.value)}
             />
-            <TaskButton onClick={() => setUpdateCompleted(!updateCompleted)}>
-              {updateCompleted ? <DoneIcon /> : <CancelIcon />}
-            </TaskButton>
+            {updateCompleted ? (
+              <TaskButton onClick={() => setUpdateCompleted(!updateCompleted)}>
+                <DoneIcon />
+              </TaskButton>
+            ) : (
+              <TaskButton onClick={() => setUpdateCompleted(!updateCompleted)}>
+                <CancelIcon />
+              </TaskButton>
+            )}
             <ButtonOutlined onClick={() => setShowDetail(!showDetal)}>Close</ButtonOutlined>
             <ButtonOutlined onClick={() => handleUpdateTask()}>Update</ButtonOutlined>
           </UpdateTaskContainer>
