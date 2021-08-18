@@ -242,13 +242,6 @@ const UpdateTaskContainer = styled.div`
   display: flex;
   padding: 1em;
   overflow: hidden;
-  & svg {
-    margin: 0 1em;
-    color: #5aff;
-    &:hover {
-      cursor: pointer;
-    }
-  }
 `
 
 const TasksHeader = styled(AppBar)`
@@ -266,6 +259,13 @@ const TaskButton = styled(IconButton)`
   display: block;
   &:hover {
     cursor: pointer;
+  }
+  & svg {
+    margin: 0 1em;
+    color: #5aff;
+    &:hover {
+      cursor: pointer;
+    }
   }
 `
 
