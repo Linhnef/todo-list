@@ -77,11 +77,6 @@ const Tasks = () => {
       updateTask.run({ _id: currentTask._id, data: { completed: updateCompleted, description: updateDescription } })
   }
 
-  const handleOpenUpdateTask = (item: Task) => {
-    setCurrentTask(item)
-    setShowDetail(!showDetal)
-  }
-
   const getFirstPage = () => {
     patchQuery({ page: 1 })
   }
@@ -157,7 +152,7 @@ const Tasks = () => {
                   {item.completed ? <CheckCircleOutlineIcon fontSize="large" /> : <CancelIcon fontSize="large" />}
                 </TableCell>
                 <TableCell>
-                  <IconButtonTable onClick={() => handleOpenUpdateTask(item)}>
+                  <IconButtonTable onClick={() => setShowDetail(!showDetal)}>
                     <ArrowForwardIosIcon fontSize="large" />
                   </IconButtonTable>
                   <IconButtonTable>
@@ -197,9 +192,15 @@ const Tasks = () => {
               defaultValue={currentTask.description}
               onChange={(event: ChangeEvent<HTMLInputElement>) => setUpdateDescription(event.target.value)}
             />
-            <TaskButton onClick={() => setUpdateCompleted(!updateCompleted)}>
-              {updateCompleted ? <DoneIcon /> : <CancelIcon />}
-            </TaskButton>
+            {updateCompleted ? (
+              <TaskButton onClick={() => setUpdateCompleted(!updateCompleted)}>
+                <DoneIcon />
+              </TaskButton>
+            ) : (
+              <TaskButton onClick={() => setUpdateCompleted(!updateCompleted)}>
+                <CancelIcon />
+              </TaskButton>
+            )}
             <ButtonOutlined onClick={() => setShowDetail(!showDetal)}>Close</ButtonOutlined>
             <ButtonOutlined onClick={() => handleUpdateTask()}>Update</ButtonOutlined>
           </UpdateTaskContainer>
@@ -241,13 +242,6 @@ const UpdateTaskContainer = styled.div`
   display: flex;
   padding: 1em;
   overflow: hidden;
-  & svg {
-    margin: 0 1em;
-    color: #5aff;
-    &:hover {
-      cursor: pointer;
-    }
-  }
 `
 
 const TasksHeader = styled(AppBar)`
@@ -265,6 +259,13 @@ const TaskButton = styled(IconButton)`
   display: block;
   &:hover {
     cursor: pointer;
+  }
+  & svg {
+    margin: 0 1em;
+    color: #5aff;
+    &:hover {
+      cursor: pointer;
+    }
   }
 `
 
