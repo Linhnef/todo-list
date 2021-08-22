@@ -14,4 +14,8 @@ export const MainLayout = (props: MainLayoutProps) => {
   )
 }
 
-const Layout = styled.div``
+const Layout = styled.div`
+  background-image: url("https://br-art.vn/wp-content/uploads/2017/07/background-phong-canh-45.jpg");
+  height: 100vh;
+  width: 100vw;
+`

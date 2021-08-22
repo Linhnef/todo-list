@@ -30,12 +30,12 @@ import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
 import { AddTaskRequest, GetTaskRequest, UpdateTaskByIdRequest } from "../services/api/createAppApiClient"
 import { TaskContext } from "../contexts/taskContext"
-import { TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
 import { Heading5 } from "../components/Text/Heading5"
 import { Task } from "../services/api/types/Task"
 import DoneIcon from "@material-ui/icons/Done"
 import useQuery from "../hooks/useQuery"
+import { NavLink } from "react-router-dom"
 const LIMIT_TASK_PER_PAGE = 3
 
 const Tasks = () => {
@@ -59,7 +59,7 @@ const Tasks = () => {
   const getTask = useAsync(async (getTaskRequest: GetTaskRequest) => {
     const response = await api.getTasks(getTaskRequest)
     if (!response) return
-    setTasks(response.data)
+    setTasks(response)
   })
   const deleteTask = useAsync(async (id: string) => {
     const response = await api.deleteTaskById(id)
@@ -77,6 +77,10 @@ const Tasks = () => {
       updateTask.run({ _id: currentTask._id, data: { completed: updateCompleted, description: updateDescription } })
   }
 
+  const hanleShowDetail = (data: Task) => {
+    setShowDetail(!showDetal)
+    setCurrentTask(data)
+  }
   const getFirstPage = () => {
     patchQuery({ page: 1 })
   }
@@ -90,18 +94,20 @@ const Tasks = () => {
   useEffect(() => {
     getTask.run({
       limit: LIMIT_TASK_PER_PAGE,
-      skip: query.page * LIMIT_TASK_PER_PAGE,
+      skip: page * LIMIT_TASK_PER_PAGE,
     })
-  }, [])
+  }, [page])
 
   return (
-    <TaskContextProvider>
+    <>
       <TasksHeader color="default" position="static">
         <Toolbar>
           <Grid container>
             <TasksHeaderGrid item sm={12}>
               <TasksHeaderBackground item>
-                <Heading2>TODO LIST</Heading2>
+                <Heading2>
+                  <NavLink to="/">TODO LIST</NavLink>
+                </Heading2>
               </TasksHeaderBackground>
               <TaskButton
                 onClick={() => {
@@ -152,10 +158,7 @@ const Tasks = () => {
                   {item.completed ? <CheckCircleOutlineIcon fontSize="large" /> : <CancelIcon fontSize="large" />}
                 </TableCell>
                 <TableCell>
-                  <IconButtonTable onClick={() => setShowDetail(!showDetal)}>
-                    <ArrowForwardIosIcon fontSize="large" />
-                  </IconButtonTable>
-                  <IconButtonTable>
+                  <IconButtonTable onClick={() => hanleShowDetail(item)}>
                     <UpdateIcon fontSize="large" />
                   </IconButtonTable>
                   <IconButtonTable onClick={() => deleteTask.run(item._id)}>
@@ -234,7 +237,7 @@ const Tasks = () => {
           </ButtonOutlined>
         </AddPaper>
       </Dialog>
-    </TaskContextProvider>
+    </>
   )
 }
 
@@ -274,6 +277,10 @@ const TasksHeaderBackground = styled(Grid)`
   padding-top: 0.5%;
   padding-left: 1%;
   float: left;
+  & a {
+    text-decoration: none;
+    color: #000;
+  }
 `
 
 const AddPaper = styled(Paper)`

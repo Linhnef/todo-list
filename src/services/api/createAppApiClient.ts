@@ -121,12 +121,13 @@ export type GetTaskRequest = {
 
 const getTasks =
   (api: AxiosInstance) =>
-  async (data: GetTaskRequest): Promise<GetTaskResponse | undefined | null> => {
+  async (data: GetTaskRequest): Promise<Task[] | undefined | null> => {
     try {
       const res = await api.get<GetTaskResponse>("/task", {
         params: data,
       })
-      return res.data
+      console.log(res.data.data)
+      return res.data.data
     } catch (err) {}
   }
 

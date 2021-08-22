@@ -118,7 +118,7 @@ const InformationContainer = styled(FormGroup)`
   justify-content: center;
   align-items: center;
   & div {
-    margin: 0.2em 0;
+    margin: 0.5em 0;
   }
   & .MuiAvatar-root {
     height: 5em;
