@@ -126,7 +126,6 @@ const getTasks =
       const res = await api.get<GetTaskResponse>("/task", {
         params: data,
       })
-      console.log(res.data.data)
       return res.data.data
     } catch (err) {}
   }
