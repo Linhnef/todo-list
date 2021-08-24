@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { useState, createContext, ReactNode } from "react"
 import { Task } from "../services/api/types/Task"
 
