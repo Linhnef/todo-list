@@ -1,138 +1,179 @@
-import { Avatar, FormGroup, Badge, IconButton, Typography } from "@material-ui/core"
-import * as React from "react"
-import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
-import { useContext, useState, ChangeEvent } from "react"
-import { AuthenticationContext } from "../contexts/authenticationContext"
-import { useHistory } from "react-router"
-import styled from "styled-components"
-import { UpdateCurrentUserRequest } from "../services/api/createAppApiClient"
-import { useAppApiClient } from "../hooks/useAppApiClient"
-import useAsync from "../hooks/useAsync"
-import { InputOutlined } from "../components/inputs/InputOutlined"
-import AddAPhotoIcon from "@material-ui/icons/AddAPhoto"
+import { AxiosInstance } from "axios"
+import { User } from "./types/User"
+import { Task } from "./types/Task"
 
-export const UpdateUser = () => {
-  const history = useHistory()
-  const api = useAppApiClient()
-  const { user, setUser, setUserAvatar, userAvatar } = useContext(AuthenticationContext)
-  const [name, setName] = useState<string>()
-  const [age, setAge] = useState<number>()
-  const [email, setEmail] = useState<string>()
-  const [preview, setPreview] = useState<string>(userAvatar ? userAvatar : "")
-  const [img, setImg] = useState<File>()
-
-  const updateUser = useAsync(async (updateUserRequest: UpdateCurrentUserRequest) => {
-    const response = await api.updateCurrentUser(updateUserRequest)
-    if (!response) return
-    setUser(response.data)
-    history.replace("/")
-  })
-
-  const updateImage = useAsync(async (data: FormData) => {
-    const response = await api.uploadImage(data)
-    if (!response) return
-    setUserAvatar(preview)
-  })
-
-  const handleUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.currentTarget.files
-    if (!files) return
-    setImg(files[0])
-    setPreview(URL.createObjectURL(files[0]))
+export const createAppApiClient = (api: AxiosInstance) => {
+  return {
+    login: login(api),
+    register: register(api),
+    logout: logout(api),
+    getCurrentUser: getCurrentUser(api),
+    updateCurrentUser: updateCurrentUser(api),
+    addTask: addTask(api),
+    getTasks: getTasks(api),
+    deleteTaskById: deleteTaskById(api),
+    updateTaskById: updateTaskById(api),
+    uploadImage: uploadImage(api),
   }
-
-  const handleUpdate = () => {
-    if (img && preview !== null) {
-      const formData = new FormData()
-      formData.append("avatar", img)
-      updateImage.run(formData)
-    }
-
-    updateUser.run({ age, name, email })
-  }
-
-  return (
-    <React.Fragment>
-      {updateUser.error === null && user ? (
-        <>
-          <Container>
-            <InformationContainer>
-              <Badge
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                badgeContent={
-                  <label htmlFor="btn-upload">
-                    <ChooseFile id="btn-upload" onChange={handleUpload} accept="image/*" type="file" />
-                    <IconButton component="span">
-                      <AddAPhotoIcon />
-                    </IconButton>
-                  </label>
-                }
-              >
-                <ProfilePicture src={preview ? preview : ""} />
-              </Badge>
-
-              <InputOutlined
-                label="Name"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => setName(event.target.value)}
-                defaultValue={user.name}
-                value={name}
-              />
-
-              <InputOutlined
-                label="Age"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => setAge(parseInt(event.target.value))}
-                defaultValue={user.age}
-                value={age}
-                type="number"
-              />
-
-              <InputOutlined
-                label="label"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
-                defaultValue={user.email}
-                value={email}
-              />
-              <ButtonOutlined color="primary" onClick={handleUpdate}>
-                Update
-              </ButtonOutlined>
-            </InformationContainer>
-          </Container>
-        </>
-      ) : updateUser.loading ? (
-        <Typography variant="h2">Loading</Typography>
-      ) : (
-        <Typography variant="h2">Error</Typography>
-      )}
-    </React.Fragment>
-  )
 }
 
-const ChooseFile = styled.input`
-  display: none;
-`
+export type LoginResponse = {
+  token: string
+  user: User
+}
 
-const ProfilePicture = styled(Avatar)`
-  &.MuiAvatar-root {
-    height: 5em;
-    width: 5em;
-    border: 1px solid black;
+export type RegisterRequest = {
+  name: string
+  email: string
+  password: string
+  age: number
+}
+
+const register =
+  (api: AxiosInstance) =>
+  async (data: RegisterRequest): Promise<LoginResponse | undefined | null> => {
+    try {
+      const res = await api.post<LoginResponse>("/user/register", data)
+      return res.data
+    } catch (err) {}
   }
-`
 
-const InformationContainer = styled(FormGroup)`
-  justify-content: center;
-  align-items: center;
-  & div {
-    margin: 0.5em 0;
+export type LoginRequest = {
+  email: string
+  password: string
+}
+
+const login =
+  (api: AxiosInstance) =>
+  async (data: LoginRequest): Promise<LoginResponse | undefined | null> => {
+    try {
+      const res = await api.post<LoginResponse>("/user/login", data)
+      return res.data
+    } catch (err) {}
   }
-`
 
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-`
+type LogoutResponse = {
+  success: boolean
+}
+
+const logout = (api: AxiosInstance) => async (): Promise<boolean | undefined | null> => {
+  try {
+    const res = await api.post<LogoutResponse>("/user/logout")
+    return res.data.success
+  } catch (err) {}
+}
+
+const getCurrentUser = (api: AxiosInstance) => async (): Promise<User | undefined | null> => {
+  try {
+    const res = await api.get<User>("/user/me")
+    return res.data
+  } catch (err) {}
+}
+
+export type UpdateCurrentUserRequest = {
+  name?: string
+  email?: string
+  age?: number
+}
+export type UpdateCurrentUserResponse = {
+  success: boolean
+  data: User
+}
+
+const updateCurrentUser =
+  (api: AxiosInstance) =>
+  async (data: UpdateCurrentUserRequest): Promise<UpdateCurrentUserResponse | undefined | null> => {
+    try {
+      const res = await api.put<UpdateCurrentUserResponse>("/user/me", data)
+      return res.data
+    } catch (err) {}
+  }
+
+export type AddTaskRequest = {
+  description: string
+  completed?: boolean
+}
+
+export type AddTaskResponse = {
+  success: boolean
+  data: Task
+}
+
+const addTask =
+  (api: AxiosInstance) =>
+  async (data: AddTaskRequest): Promise<boolean | undefined | null> => {
+    try {
+      const res = await api.post<AddTaskResponse>("/task", data)
+      return res.data.success
+    } catch (err) {}
+  }
+
+export type GetTaskResponse = {
+  count: number
+  data: Task[]
+}
+
+export type GetTaskRequest = {
+  completed?: boolean
+  limit?: number
+  skip?: number
+}
+
+const getTasks =
+  (api: AxiosInstance) =>
+  async (data: GetTaskRequest): Promise<Task[] | undefined | null> => {
+    try {
+      const res = await api.get<GetTaskResponse>("/task", {
+        params: data,
+      })
+      return res.data.data
+    } catch (err) {}
+  }
+
+export type DeleteTaskByIdResponse = {
+  success: boolean
+  data: Task
+}
+
+const deleteTaskById =
+  (api: AxiosInstance) =>
+  async (id: string): Promise<DeleteTaskByIdResponse | undefined | null> => {
+    try {
+      const res = await api.delete<DeleteTaskByIdResponse>(`/task/${id}`)
+      return res.data
+    } catch (err) {}
+  }
+export type UpdateTaskByIdRequest = {
+  _id: string
+  data: {
+    completed?: boolean
+    description?: string
+  }
+}
+
+export type UpdateTaskByIdResponse = {
+  success: boolean
+  data: Task
+}
+
+const updateTaskById =
+  (api: AxiosInstance) =>
+  async (data: UpdateTaskByIdRequest): Promise<UpdateTaskByIdResponse | undefined | null> => {
+    try {
+      const res = await api.put<UpdateTaskByIdResponse>(`/task/${data._id}`, data.data)
+      return res.data
+    } catch (err) {}
+  }
+
+type UploadImageResponse = {
+  success: boolean
+}
+const uploadImage =
+  (api: AxiosInstance) =>
+  async (data: FormData): Promise<boolean | undefined | null> => {
+    try {
+      const res = await api.post<UploadImageResponse>("/user/me/avatar", data)
+
+      return res.data.success
+    } catch (error) {}
+  }
