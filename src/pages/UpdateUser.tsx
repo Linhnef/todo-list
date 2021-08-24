@@ -18,7 +18,7 @@ export const UpdateUser = () => {
   const [name, setName] = useState<string>()
   const [age, setAge] = useState<number>()
   const [email, setEmail] = useState<string>()
-  const [preview, setPreview] = useState<string | null>(userAvatar ? userAvatar : null)
+  const [preview, setPreview] = useState<string>(userAvatar ? userAvatar : "")
   const [img, setImg] = useState<File>()
 
   const updateUser = useAsync(async (updateUserRequest: UpdateCurrentUserRequest) => {
@@ -31,13 +31,14 @@ export const UpdateUser = () => {
   const updateImage = useAsync(async (data: FormData) => {
     const response = await api.uploadImage(data)
     if (!response) return
+    setUserAvatar(preview)
   })
 
   const handleUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.currentTarget.files as unknown as File[]
-    if (!file) return
-    setImg(file[0])
-    setPreview(URL.createObjectURL(file[0]))
+    const files = event.currentTarget.files
+    if (!files) return
+    setImg(files[0])
+    setPreview(URL.createObjectURL(files[0]))
   }
 
   const handleUpdate = () => {
@@ -45,7 +46,6 @@ export const UpdateUser = () => {
       const formData = new FormData()
       formData.append("avatar", img)
       updateImage.run(formData)
-      setUserAvatar(preview)
     }
 
     updateUser.run({ age, name, email })
@@ -71,7 +71,7 @@ export const UpdateUser = () => {
                   </label>
                 }
               >
-                <Avatar src={preview ? preview : ""} />
+                <ProfilePicture src={preview ? preview : ""} />
               </Badge>
 
               <InputOutlined
@@ -95,7 +95,7 @@ export const UpdateUser = () => {
                 defaultValue={user.email}
                 value={email}
               />
-              <ButtonOutlined color="primary" onClick={() => handleUpdate()}>
+              <ButtonOutlined color="primary" onClick={handleUpdate}>
                 Update
               </ButtonOutlined>
             </InformationContainer>
@@ -114,16 +114,19 @@ const ChooseFile = styled.input`
   display: none;
 `
 
+const ProfilePicture = styled(Avatar)`
+  &.MuiAvatar-root {
+    height: 5em;
+    width: 5em;
+    border: 1px solid black;
+  }
+`
+
 const InformationContainer = styled(FormGroup)`
   justify-content: center;
   align-items: center;
   & div {
     margin: 0.5em 0;
-  }
-  & .MuiAvatar-root {
-    height: 5em;
-    width: 5em;
-    border: 1px solid black;
   }
 `
 
