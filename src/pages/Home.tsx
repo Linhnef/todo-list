@@ -1,4 +1,4 @@
-import { Grid, Dialog, Paper, Avatar } from "@material-ui/core"
+import { Grid, Dialog, Paper } from "@material-ui/core"
 import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 import { MainLayout } from "../layouts/MainLayout"
 import { AuthenticationContext } from "../contexts/authenticationContext"
@@ -6,17 +6,11 @@ import { useContext, useState } from "react"
 import { NavLink } from "react-router-dom"
 import styled from "styled-components"
 import { LogoutButton } from "../components/buttons/LogoutButton"
+import UserAvatar from "../components/UserAvatar"
 
 export const Home = () => {
-  const { user, userAvatar } = useContext(AuthenticationContext)
+  const { user } = useContext(AuthenticationContext)
   const [profileDialogStatus, setProfileDialogStatus] = useState(false)
-
-  const generaDefaultAvatar = () => {
-    if (!user) return "?".toUpperCase()
-    const nameArray = user?.name.split(" ")
-    if (nameArray?.length === 1) return nameArray[0][0].toUpperCase()
-    return (nameArray[0][0] + nameArray[nameArray?.length][0]).toUpperCase()
-  }
   const handleProfileStatusDIalogChange = () => {
     setProfileDialogStatus(!profileDialogStatus)
   }
@@ -36,7 +30,7 @@ export const Home = () => {
           {user ? (
             <ProfileTitle>
               <h2>Profile</h2>
-              {userAvatar ? <Avatar src={userAvatar} /> : <Avatar>{generaDefaultAvatar()}</Avatar>}
+              <UserAvatar />
               <h4>
                 {user.name} : {user.age}
               </h4>
