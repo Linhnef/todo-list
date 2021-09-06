@@ -11,6 +11,12 @@ export const Home = () => {
   const { user, userAvatar } = useContext(AuthenticationContext)
   const [profileDialogStatus, setProfileDialogStatus] = useState(false)
 
+  const generaDefaultAvatar = () => {
+    if (!user) return "?".toUpperCase()
+    const nameArray = user?.name.split(" ")
+    if (nameArray?.length === 1) return nameArray[0][0].toUpperCase()
+    return (nameArray[0][0] + nameArray[nameArray?.length][0]).toUpperCase()
+  }
   const handleProfileStatusDIalogChange = () => {
     setProfileDialogStatus(!profileDialogStatus)
   }
@@ -30,7 +36,7 @@ export const Home = () => {
           {user ? (
             <ProfileTitle>
               <h2>Profile</h2>
-              <Avatar src={userAvatar ? userAvatar : ""} />
+              {userAvatar ? <Avatar src={userAvatar} /> : <Avatar>{generaDefaultAvatar()}</Avatar>}
               <h4>
                 {user.name} : {user.age}
               </h4>
