@@ -15,12 +15,13 @@ import styled from "styled-components"
 export const Login = () => {
   const history = useHistory()
   const api = useAppApiClient()
-  const { setToken, setUser } = useContext(AuthenticationContext)
+  const { setToken, setUser, setUserAvatar } = useContext(AuthenticationContext)
   const [formValid, setFormValid] = useState(false)
 
   const getUserImage = useAsync(async (data: string) => {
     const response = await api.getUserImage(data)
     if (!response) return
+    setUserAvatar(response)
   })
 
   const login = useAsync(async (loginRequest: LoginRequest) => {
