@@ -17,6 +17,6 @@ export const MainLayout = (props: MainLayoutProps) => {
 
 const Layout = styled.div`
   background-image: url(${backgroundImage});
-  height: 100vh;
+  height: 100%;
   width: 100vw;
 `
