@@ -1,4 +1,4 @@
-import { Grid, Dialog, Paper } from "@material-ui/core"
+import { Grid, Dialog, Paper, Avatar } from "@material-ui/core"
 import { ButtonOutlined } from "../components/buttons/ButtonOutlined"
 import { MainLayout } from "../layouts/MainLayout"
 import { AuthenticationContext } from "../contexts/authenticationContext"
@@ -8,7 +8,7 @@ import styled from "styled-components"
 import { LogoutButton } from "../components/buttons/LogoutButton"
 
 export const Home = () => {
-  const { user } = useContext(AuthenticationContext)
+  const { user, userAvatar } = useContext(AuthenticationContext)
   const [profileDialogStatus, setProfileDialogStatus] = useState(false)
 
   const handleProfileStatusDIalogChange = () => {
@@ -30,6 +30,7 @@ export const Home = () => {
           {user ? (
             <ProfileTitle>
               <h2>Profile</h2>
+              <Avatar src={userAvatar ? userAvatar : ""} />
               <h4>
                 {user.name} : {user.age}
               </h4>
@@ -49,6 +50,10 @@ const RequireLoginCard = styled.h2`
 `
 
 const ProfileTitle = styled(Grid)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   text-align: center;
   padding: 2em;

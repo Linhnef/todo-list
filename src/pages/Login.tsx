@@ -29,6 +29,7 @@ export const Login = () => {
     if (!response) return
     setToken(response.token)
     setUser(response.user)
+    getUserImage.run(response.user._id)
     history.replace("/")
   })
 
