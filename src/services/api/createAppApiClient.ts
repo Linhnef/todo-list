@@ -14,6 +14,7 @@ export const createAppApiClient = (api: AxiosInstance) => {
     deleteTaskById: deleteTaskById(api),
     updateTaskById: updateTaskById(api),
     uploadImage: uploadImage(api),
+    getUserImage: getUserImage(api),
   }
 }
 
@@ -175,5 +176,15 @@ const uploadImage =
       const res = await api.post<UploadImageResponse>("/user/me/avatar", data)
 
       return res.data.success
+    } catch (error) {}
+  }
+
+const getUserImage =
+  (api: AxiosInstance) =>
+  async (id: string): Promise<string | undefined> => {
+    try {
+      const res = await api.get<string>(`/user/${id}/avatar`)
+
+      return res.request.responseURL
     } catch (error) {}
   }

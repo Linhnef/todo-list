@@ -17,6 +17,12 @@ export const Login = () => {
   const api = useAppApiClient()
   const { setToken, setUser } = useContext(AuthenticationContext)
   const [formValid, setFormValid] = useState(false)
+
+  const getUserImage = useAsync(async (data: string) => {
+    const response = await api.getUserImage(data)
+    if (!response) return
+  })
+
   const login = useAsync(async (loginRequest: LoginRequest) => {
     const response = await api.login(loginRequest)
     if (!response) return
