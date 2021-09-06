@@ -13,6 +13,7 @@ export const createAppApiClient = (api: AxiosInstance) => {
     getTasks: getTasks(api),
     deleteTaskById: deleteTaskById(api),
     updateTaskById: updateTaskById(api),
+    uploadImage: uploadImage(api),
   }
 }
 
@@ -120,12 +121,12 @@ export type GetTaskRequest = {
 
 const getTasks =
   (api: AxiosInstance) =>
-  async (data: GetTaskRequest): Promise<GetTaskResponse | undefined | null> => {
+  async (data: GetTaskRequest): Promise<Task[] | undefined | null> => {
     try {
       const res = await api.get<GetTaskResponse>("/task", {
         params: data,
       })
-      return res.data
+      return res.data.data
     } catch (err) {}
   }
 
@@ -162,4 +163,17 @@ const updateTaskById =
       const res = await api.put<UpdateTaskByIdResponse>(`/task/${data._id}`, data.data)
       return res.data
     } catch (err) {}
+  }
+
+type UploadImageResponse = {
+  success: boolean
+}
+const uploadImage =
+  (api: AxiosInstance) =>
+  async (data: FormData): Promise<boolean | undefined | null> => {
+    try {
+      const res = await api.post<UploadImageResponse>("/user/me/avatar", data)
+
+      return res.data.success
+    } catch (error) {}
   }
