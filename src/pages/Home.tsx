@@ -9,7 +9,7 @@ import { LogoutButton } from "../components/buttons/LogoutButton"
 import UserAvatar from "../components/UserAvatar"
 
 export const Home = () => {
-  const { user } = useContext(AuthenticationContext)
+  const { user, userAvatar } = useContext(AuthenticationContext)
   const [profileDialogStatus, setProfileDialogStatus] = useState(false)
   const handleProfileStatusDIalogChange = () => {
     setProfileDialogStatus(!profileDialogStatus)
@@ -30,7 +30,7 @@ export const Home = () => {
           {user ? (
             <ProfileTitle>
               <h2>Profile</h2>
-              <UserAvatar />
+              <UserAvatar name={user.name} userAvatar={userAvatar} />
               <h4>
                 {user.name} : {user.age}
               </h4>

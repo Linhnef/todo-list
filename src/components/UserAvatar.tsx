@@ -1,12 +1,18 @@
-import { useContext } from "react"
 import { Avatar } from "@material-ui/core"
-import { AuthenticationContext } from "../contexts/authenticationContext"
+import { useEffect } from "react"
 import { getAbbreviatedString } from "../helpers/getAbbreviatedString"
 
-function UserAvatar() {
-  const { userAvatar, user } = useContext(AuthenticationContext)
+interface UserAvatarProps {
+  name: string
+  userAvatar?: string | null
+}
+
+const UserAvatar = (props: UserAvatarProps) => {
+  useEffect(() => {
+    console.log(getAbbreviatedString(props.name))
+  }, [])
   return (
-    <> {userAvatar ? <Avatar src={userAvatar} /> : <Avatar>{user ? getAbbreviatedString(user.name) : "?"}</Avatar>}</>
+    <> {props.userAvatar ? <Avatar src={props.userAvatar} /> : <Avatar>{getAbbreviatedString(props.name)}</Avatar>}</>
   )
 }
 
