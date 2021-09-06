@@ -29,7 +29,7 @@ import { useState, ChangeEvent, useContext, useEffect } from "react"
 import { useAppApiClient } from "../hooks/useAppApiClient"
 import useAsync from "../hooks/useAsync"
 import { AddTaskRequest, GetTaskRequest, UpdateTaskByIdRequest } from "../services/api/createAppApiClient"
-import { TaskContext } from "../contexts/taskContext"
+import { TaskContext, TaskContextProvider } from "../contexts/taskContext"
 import { Heading2 } from "../components/Text/Heading2"
 import { Heading5 } from "../components/Text/Heading5"
 import { Task } from "../services/api/types/Task"
@@ -99,7 +99,7 @@ const Tasks = () => {
   }, [page])
 
   return (
-    <>
+    <TaskContextProvider>
       <TasksHeader color="default" position="static">
         <Toolbar>
           <Grid container>
@@ -237,7 +237,7 @@ const Tasks = () => {
           </ButtonOutlined>
         </AddPaper>
       </Dialog>
-    </>
+    </TaskContextProvider>
   )
 }
 

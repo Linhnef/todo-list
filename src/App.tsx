@@ -7,7 +7,6 @@ import { useContext } from "react"
 import { AuthenticationContext } from "./contexts/authenticationContext"
 import { UpdateUser } from "./pages/UpdateUser"
 import Tasks from "./pages/Tasks"
-import { TaskContextProvider } from "./contexts/taskContext"
 
 function App() {
   const { token } = useContext(AuthenticationContext)
@@ -30,9 +29,7 @@ function App() {
             <UpdateUser />
           </Route>
           <Route path="/task">
-            <TaskContextProvider>
-              <Tasks />
-            </TaskContextProvider>
+            <Tasks />
           </Route>
           <Route exact path="/">
             <Home />

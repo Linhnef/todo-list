@@ -18,7 +18,7 @@ export const UpdateUser = () => {
   const [name, setName] = useState<string>()
   const [age, setAge] = useState<number>()
   const [email, setEmail] = useState<string>()
-  const [preview, setPreview] = useState<string | null>(userAvatar ? userAvatar : null)
+  const [preview, setPreview] = useState<string>(userAvatar ? userAvatar : "")
   const [img, setImg] = useState<File>()
 
   const updateUser = useAsync(async (updateUserRequest: UpdateCurrentUserRequest) => {
