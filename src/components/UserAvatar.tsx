@@ -1,7 +1,7 @@
 import { Avatar } from "@material-ui/core"
 import { getAbbreviatedString } from "../helpers/getAbbreviatedString"
 
-interface UserAvatarProps {
+type UserAvatarProps = {
   name: string
   userAvatar?: string | null
 }
