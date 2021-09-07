@@ -7,9 +7,7 @@ interface UserAvatarProps {
 }
 
 const UserAvatar = (props: UserAvatarProps) => {
-  return (
-    <> {props.userAvatar ? <Avatar src={props.userAvatar} /> : <Avatar>{getAbbreviatedString(props.name)}</Avatar>}</>
-  )
+  return props.userAvatar ? <Avatar src={props.userAvatar} /> : <Avatar>{getAbbreviatedString(props.name)}</Avatar>
 }
 
 export default UserAvatar
