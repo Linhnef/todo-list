@@ -6,11 +6,11 @@ import { useContext, useState } from "react"
 import { NavLink } from "react-router-dom"
 import styled from "styled-components"
 import { LogoutButton } from "../components/buttons/LogoutButton"
+import UserAvatar from "../components/UserAvatar"
 
 export const Home = () => {
-  const { user } = useContext(AuthenticationContext)
+  const { user, userAvatar } = useContext(AuthenticationContext)
   const [profileDialogStatus, setProfileDialogStatus] = useState(false)
-
   const handleProfileStatusDIalogChange = () => {
     setProfileDialogStatus(!profileDialogStatus)
   }
@@ -30,6 +30,7 @@ export const Home = () => {
           {user ? (
             <ProfileTitle>
               <h2>Profile</h2>
+              <UserAvatar name={user.name} userAvatar={userAvatar} />
               <h4>
                 {user.name} : {user.age}
               </h4>
@@ -49,6 +50,10 @@ const RequireLoginCard = styled.h2`
 `
 
 const ProfileTitle = styled(Grid)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   text-align: center;
   padding: 2em;

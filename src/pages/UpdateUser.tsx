@@ -31,7 +31,7 @@ export const UpdateUser = () => {
   const updateImage = useAsync(async (data: FormData) => {
     const response = await api.uploadImage(data)
     if (!response) return
-    setUserAvatar(preview)
+    preview && setUserAvatar(preview)
   })
 
   const handleUpload = async (event: ChangeEvent<HTMLInputElement>) => {
